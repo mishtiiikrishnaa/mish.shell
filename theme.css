@@ -1,0 +1,285 @@
+/* ghostty fetch — an obsidian theme that wears your ghostty config
+   install: <vault>/.obsidian/themes/Ghostty Fetch/  (manifest.json + theme.css)
+   knobs:   --ff-fs  = panel font size
+            --ff-pad = panel left margin
+   live clock / links / tags: see ff-live.js (optional, pasted into devtools console)
+*/
+
+/* ── palette + fonts (straight from ~/.config/ghostty/config) ───────── */
+body {
+  --ff-fs: 10px;
+  --ff-pad: 12px;
+  --ff-font: "CMU Typewriter Text", "Symbols Nerd Font Mono", ui-monospace, Menlo, monospace;
+
+  --ff-bg: #0f0f12;
+  --ff-fg: #e8e8ed;
+  --ff-red: #ff78a5;      --ff-red-b: #ffa6c9;
+  --ff-green: #c9ffa6;    --ff-green-b: #e8ffd6;
+  --ff-yellow: #ffd6a6;   --ff-yellow-b: #ffe8c9;
+  --ff-blue: #a6c9ff;     --ff-blue-b: #c9dfff;
+  --ff-magenta: #ffa6c9;  --ff-magenta-b: #ffc9df;
+  --ff-cyan: #a6fff0;     --ff-cyan-b: #c9fff8;
+  --ff-black-b: #2a2a2f;
+  --ff-lavender: #c9a6ff;
+  --ff-peach: #ffb7a6;
+
+  --font-interface-theme: var(--ff-font);
+  --font-text-theme: var(--ff-font);
+  --font-monospace-theme: var(--ff-font);
+}
+
+.theme-dark {
+  color-scheme: dark;
+
+  --background-primary: #0f0f12;
+  --background-primary-alt: #16161b;
+  --background-secondary: #0f0f12;
+  --background-secondary-alt: #16161b;
+  --background-modifier-border: #2a2a2f;
+  --background-modifier-hover: rgba(255, 166, 201, 0.08);
+  --background-modifier-active-hover: rgba(255, 166, 201, 0.14);
+
+  --text-normal: #e8e8ed;
+  --text-muted: #a8a8b3;
+  --text-faint: #6a6a75;
+  --text-accent: #ffa6c9;
+  --text-accent-hover: #ffc9df;
+  --text-on-accent: #0f0f12;
+  --text-selection: rgba(255, 166, 201, 0.45);
+
+  --interactive-accent: #ffa6c9;
+  --interactive-accent-hover: #ffc9df;
+
+  --link-color: #a6c9ff;
+  --link-color-hover: #c9dfff;
+  --link-external-color: #a6fff0;
+  --tag-color: #ffd6a6;
+  --code-normal: #c9ffa6;
+  --blockquote-border-color: #ffa6c9;
+
+  --h1-color: #ff78a5;
+  --h2-color: #ffd6a6;
+  --h3-color: #c9ffa6;
+  --h4-color: #a6fff0;
+  --h5-color: #a6c9ff;
+  --h6-color: #ffa6c9;
+
+  --radius-m: 12px;
+  --radius-l: 16px;
+
+  caret-color: #ffa6c9;
+}
+
+/* glass: only does anything if "translucent window" is on in appearance */
+body.theme-dark.is-translucent {
+  --background-primary: rgba(15, 15, 18, 0.82);
+  --background-secondary: rgba(15, 15, 18, 0.82);
+}
+
+.cm-cursor, .cm-fat-cursor { border-left: 2px solid #ffa6c9 !important; }
+::selection { background: rgba(255, 166, 201, 0.55); }
+
+/* ── the fetch panel: file explorer host ────────────────────────────── */
+.workspace-leaf-content[data-type="file-explorer"] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+  --ff-info-x: calc(30ch + 18px); /* where the info column starts (for swatches) */
+}
+
+.workspace-leaf-content[data-type="file-explorer"] > .view-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  column-gap: 18px;
+  counter-reset: ff-notes ff-files ff-dirs ff-attach;
+}
+
+/* put the real explorer under the panel */
+.workspace-leaf-content[data-type="file-explorer"] .nav-header {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+}
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* ── counters: css counting the explorer's own rows ─────────────────── */
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title[data-path$=".md"] {
+  counter-increment: ff-files ff-notes;
+}
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title:not([data-path$=".md"]) {
+  counter-increment: ff-files ff-attach;
+}
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder:not(.mod-root) > .nav-folder-title {
+  counter-increment: ff-dirs;
+}
+/* display:none elements can't be counted, so collapsed folders stay "rendered" but clipped */
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.is-collapsed > .nav-folder-children {
+  display: block !important;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 1. the prompt pill: [ mishti ][ ~ ][ clock ] ───────────────────── */
+.workspace-leaf-content[data-type="file-explorer"]::before {
+  content: "\f179  mishti" "  ~           " "\f017  " var(--ff-hm, "--:--");
+  flex: 0 0 auto;
+  align-self: flex-start;
+  width: max-content;
+  margin: 10px 0 8px var(--ff-pad);
+  padding: 0.15em 1.4ch;
+  font-family: var(--ff-font);
+  font-size: var(--ff-fs);
+  line-height: 1.4;
+  white-space: pre;
+  color: var(--ff-bg);
+  border-radius: 999px;
+  background-image: linear-gradient(90deg,
+    var(--ff-magenta)  0     10ch,
+    var(--ff-yellow)   10ch  13.5ch,
+    var(--ff-green)    13.5ch 17ch,
+    var(--ff-cyan)     17ch  20ch,
+    var(--ff-blue)     20ch  23ch,
+    var(--ff-lavender) 23ch);
+}
+
+/* ❯ fastfetch, sitting right of the pill */
+.workspace-leaf-content[data-type="file-explorer"]::after {
+  content: "\276F  fastfetch";
+  position: absolute;
+  top: 10px;
+  left: calc(var(--ff-pad) + 31.8ch + 1.2ch);
+  padding-top: 0.15em;
+  font-family: var(--ff-font);
+  font-size: var(--ff-fs);
+  line-height: 1.4;
+  white-space: pre;
+  color: var(--ff-green);
+  pointer-events: none;
+}
+
+/* ── 2. the apple logo, rainbow banded ──────────────────────────────── */
+.workspace-leaf-content[data-type="file-explorer"] > .view-content::before {
+  grid-row: 1;
+  grid-column: 1;
+  align-self: start;
+  margin-left: var(--ff-pad);
+  font-family: var(--ff-font);
+  font-size: var(--ff-fs);
+  line-height: 1.2;
+  white-space: pre;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(180deg,
+    var(--ff-green)   0      7.2em,
+    var(--ff-yellow)  7.2em  9.6em,
+    var(--ff-peach)   9.6em  12em,
+    var(--ff-red)     12em   14.4em,
+    var(--ff-magenta) 14.4em 16.8em,
+    var(--ff-blue)    16.8em);
+  content:
+    "                     ..'\A"
+    "                 ,xNMM.\A"
+    "               .OMMMMo\A"
+    "               lMM\"\A"
+    "     .;loddo:.  .olloddol;.\A"
+    "   cKMMMMMMMMMMNWMMMMMMMMMMO:\A"
+    " .KMMMMMMMMMMMMMMMMMMMMMMMWd.\A"
+    " XMMMMMMMMMMMMMMMMMMMMMMMX.\A"
+    ";MMMMMMMMMMMMMMMMMMMMMMMM:\A"
+    ":MMMMMMMMMMMMMMMMMMMMMMMM:\A"
+    ".MMMMMMMMMMMMMMMMMMMMMMMMX.\A"
+    " kMMMMMMMMMMMMMMMMMMMMMMMMWd.\A"
+    " 'XMMMMMMMMMMMMMMMMMMMMMMMMMMk\A"
+    "  'XMMMMMMMMMMMMMMMMMMMMMMMMK.\A"
+    "    kMMMMMMMMMMMMMMMMMMMMMMd\A"
+    "     ;KMMMMMMMWXXWMMMMMMMk.\A"
+    "       \"cooc*\"    \"*coo'\"";
+}
+
+/* ── 3. the info column: keys green, values white, title block green ── */
+.workspace-leaf-content[data-type="file-explorer"] > .view-content::after {
+  grid-row: 1;
+  grid-column: 2;
+  align-self: start;
+  font-family: var(--ff-font);
+  font-size: var(--ff-fs);
+  line-height: 1.5;
+  white-space: pre;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image:
+    linear-gradient(var(--ff-green), var(--ff-green)),
+    linear-gradient(90deg, var(--ff-green) 0 10ch, transparent 10ch),
+    linear-gradient(var(--ff-fg), var(--ff-fg));
+  background-size: 100% 3em, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  content:
+    "mishti@" var(--ff-vault, "vault") "\A"
+    "------------------------\A"
+    "notes:    " var(--ff-notes, counter(ff-notes)) "\A"
+    "files:    " var(--ff-files, counter(ff-files)) "\A"
+    "folders:  " var(--ff-dirs, counter(ff-dirs)) "\A"
+    "attach:   " var(--ff-attach, counter(ff-attach)) "\A"
+    "links:    " var(--ff-links, "n/a") "\A"
+    "tags:     " var(--ff-tags, "n/a") "\A"
+    "disk:     " var(--ff-disk, "n/a") "\A"
+    "date:     " var(--ff-date, "-- --- ----") "\A"
+    "day:      " var(--ff-day, "---") "\A"
+    "time:     " var(--ff-time, "--:--:--") "\A"
+    "uptime:   " var(--ff-up, "n/a") "\A"
+    "theme:    ghostty-pink (dark)\A"
+    "font:     CMU Typewriter Text\A"
+    "cursor:   bar #ffa6c9";
+}
+
+/* ── 4. the 16-colour palette strip ─────────────────────────────────── */
+.workspace-leaf-content[data-type="file-explorer"] .nav-header::before {
+  content: "";
+  order: -1;
+  flex: 0 0 100%;
+  height: 2.6em;
+  margin: 6px 0 8px;
+  font-family: var(--ff-font);
+  font-size: var(--ff-fs);
+  background-image:
+    linear-gradient(90deg,
+      var(--ff-black-b) 0 3ch, var(--ff-magenta) 3ch 6ch, var(--ff-green-b) 6ch 9ch, var(--ff-yellow-b) 9ch 12ch,
+      #c9dfff 12ch 15ch, var(--ff-magenta-b) 15ch 18ch, var(--ff-cyan-b) 18ch 21ch, #ffffff 21ch 24ch),
+    linear-gradient(90deg,
+      var(--ff-bg) 0 3ch, var(--ff-red) 3ch 6ch, var(--ff-green) 6ch 9ch, var(--ff-yellow) 9ch 12ch,
+      var(--ff-blue) 12ch 15ch, var(--ff-magenta) 15ch 18ch, var(--ff-cyan) 18ch 21ch, var(--ff-fg) 21ch 24ch);
+  background-size: 24ch 1.3em;
+  background-repeat: no-repeat;
+  background-position: calc(var(--ff-pad) + var(--ff-info-x)) 1.3em, calc(var(--ff-pad) + var(--ff-info-x)) 0;
+}
+
+/* ── narrow sidebar: drop the logo, keep the info ───────────────────── */
+@container (max-width: 340px) {
+  .workspace-leaf-content[data-type="file-explorer"] > .view-content {
+    grid-template-columns: 0 1fr;
+    column-gap: 0;
+    --ff-info-x: 0px;
+  }
+  .workspace-leaf-content[data-type="file-explorer"] > .view-content::before {
+    display: none;
+  }
+  .workspace-leaf-content[data-type="file-explorer"] > .view-content::after {
+    margin-left: var(--ff-pad);
+  }
+}
