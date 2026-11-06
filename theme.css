@@ -1,285 +1,414 @@
-/* ghostty fetch — an obsidian theme that wears your ghostty config
-   install: <vault>/.obsidian/themes/Ghostty Fetch/  (manifest.json + theme.css)
-   knobs:   --ff-fs  = panel font size
-            --ff-pad = panel left margin
-   live clock / links / tags: see ff-live.js (optional, pasted into devtools console)
-*/
+/* ═══════════════════════════════════════════════════════════════════════
+   terminal-vault
+   a starship/eza skin for the obsidian left sidebar.
+   palette lifted, molecule for molecule, from ~/.config/ghostty/config
+   font: CMU Typewriter Text (falls back to Symbols Nerd Font Mono for glyphs)
 
-/* ── palette + fonts (straight from ~/.config/ghostty/config) ───────── */
+   install: .obsidian/snippets/terminal-vault.css
+   then settings → appearance → css snippets → refresh → toggle on
+   ═══════════════════════════════════════════════════════════════════════ */
+
 body {
-  --ff-fs: 10px;
-  --ff-pad: 12px;
-  --ff-font: "CMU Typewriter Text", "Symbols Nerd Font Mono", ui-monospace, Menlo, monospace;
+  /* ghostty palette ─────────────────────────────────────────────────── */
+  --vf-bg:        #0f0f12;
+  --vf-bg-soft:   #14141a;
+  --vf-bg-hover:  #1b1b22;
+  --vf-fg:        #e8e8ed;
+  --vf-dim:       #6d6d7a;
 
-  --ff-bg: #0f0f12;
-  --ff-fg: #e8e8ed;
-  --ff-red: #ff78a5;      --ff-red-b: #ffa6c9;
-  --ff-green: #c9ffa6;    --ff-green-b: #e8ffd6;
-  --ff-yellow: #ffd6a6;   --ff-yellow-b: #ffe8c9;
-  --ff-blue: #a6c9ff;     --ff-blue-b: #c9dfff;
-  --ff-magenta: #ffa6c9;  --ff-magenta-b: #ffc9df;
-  --ff-cyan: #a6fff0;     --ff-cyan-b: #c9fff8;
-  --ff-black-b: #2a2a2f;
-  --ff-lavender: #c9a6ff;
-  --ff-peach: #ffb7a6;
+  --vf-black:     #0f0f12;
+  --vf-grey:      #2a2a2f;
+  --vf-pink:      #ff78a5;
+  --vf-pink-hi:   #ffa6c9;
+  --vf-green:     #c9ffa6;
+  --vf-green-hi:  #e8ffd6;
+  --vf-peach:     #ffd6a6;
+  --vf-peach-hi:  #ffe8c9;
+  --vf-blue:      #a6c9ff;
+  --vf-blue-hi:   #c9dfff;
+  --vf-cyan:      #a6fff0;
+  --vf-cyan-hi:   #c9fff8;
 
-  --font-interface-theme: var(--ff-font);
-  --font-text-theme: var(--ff-font);
-  --font-monospace-theme: var(--ff-font);
+  --vf-line:      #2a2a2f;
+
+  --vf-mono: "CMU Typewriter Text", "Symbols Nerd Font Mono",
+             "Berkeley Mono", ui-monospace, "SF Mono", monospace;
 }
 
-.theme-dark {
-  color-scheme: dark;
+/* ═══ 1. the sidebar shell ═══════════════════════════════════════════ */
 
-  --background-primary: #0f0f12;
-  --background-primary-alt: #16161b;
-  --background-secondary: #0f0f12;
-  --background-secondary-alt: #16161b;
-  --background-modifier-border: #2a2a2f;
-  --background-modifier-hover: rgba(255, 166, 201, 0.08);
-  --background-modifier-active-hover: rgba(255, 166, 201, 0.14);
+.mod-left-split {
+  --background-primary: var(--vf-bg);
+  --background-secondary: var(--vf-bg);
+  --nav-item-color: var(--vf-fg);
+  --nav-item-color-hover: var(--vf-fg);
+  --nav-item-background-hover: var(--vf-bg-hover);
+  --nav-item-background-active: rgba(255, 120, 165, 0.12);
+  --nav-item-color-active: var(--vf-pink-hi);
+  --nav-indentation-guide-color: var(--vf-line);
+  --nav-indentation-guide-width: 1px;
+  --nav-file-tag-color: var(--vf-dim);
+  --text-normal: var(--vf-fg);
+  --text-faint: var(--vf-dim);
+  --text-muted: var(--vf-dim);
+  --text-accent: var(--vf-pink);
+  --text-selection: rgba(255, 166, 201, 0.28);
 
-  --text-normal: #e8e8ed;
-  --text-muted: #a8a8b3;
-  --text-faint: #6a6a75;
-  --text-accent: #ffa6c9;
-  --text-accent-hover: #ffc9df;
-  --text-on-accent: #0f0f12;
-  --text-selection: rgba(255, 166, 201, 0.45);
-
-  --interactive-accent: #ffa6c9;
-  --interactive-accent-hover: #ffc9df;
-
-  --link-color: #a6c9ff;
-  --link-color-hover: #c9dfff;
-  --link-external-color: #a6fff0;
-  --tag-color: #ffd6a6;
-  --code-normal: #c9ffa6;
-  --blockquote-border-color: #ffa6c9;
-
-  --h1-color: #ff78a5;
-  --h2-color: #ffd6a6;
-  --h3-color: #c9ffa6;
-  --h4-color: #a6fff0;
-  --h5-color: #a6c9ff;
-  --h6-color: #ffa6c9;
-
-  --radius-m: 12px;
-  --radius-l: 16px;
-
-  caret-color: #ffa6c9;
+  background: var(--vf-bg);
+  font-family: var(--vf-mono);
 }
 
-/* glass: only does anything if "translucent window" is on in appearance */
-body.theme-dark.is-translucent {
-  --background-primary: rgba(15, 15, 18, 0.82);
-  --background-secondary: rgba(15, 15, 18, 0.82);
+/* kill the default chrome so the pane reads as a terminal */
+.mod-left-split .workspace-tab-header-container,
+.mod-left-split .workspace-tab-header-container-inner,
+.mod-left-split .view-header {
+  background: var(--vf-bg);
+  border-color: var(--vf-line);
+  box-shadow: none;
 }
 
-.cm-cursor, .cm-fat-cursor { border-left: 2px solid #ffa6c9 !important; }
-::selection { background: rgba(255, 166, 201, 0.55); }
-
-/* ── the fetch panel: file explorer host ────────────────────────────── */
-.workspace-leaf-content[data-type="file-explorer"] {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  container-type: inline-size;
-  --ff-info-x: calc(30ch + 18px); /* where the info column starts (for swatches) */
+.mod-left-split .workspace-tab-header {
+  font-family: var(--vf-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--vf-dim);
+  border-radius: 5px;
 }
 
-.workspace-leaf-content[data-type="file-explorer"] > .view-content {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  column-gap: 18px;
-  counter-reset: ff-notes ff-files ff-dirs ff-attach;
+.mod-left-split .workspace-tab-header.is-active {
+  color: var(--vf-pink);
+  background: transparent;
 }
 
-/* put the real explorer under the panel */
-.workspace-leaf-content[data-type="file-explorer"] .nav-header {
-  grid-column: 1 / -1;
-  grid-row: 2;
+.mod-left-split .workspace-tab-header.is-active .workspace-tab-header-inner::after {
+  background: var(--vf-pink);
+  height: 1px;
+}
+
+/* scrollbars, thin and unbothered */
+.mod-left-split ::-webkit-scrollbar { width: 6px; }
+.mod-left-split ::-webkit-scrollbar-track { background: transparent; }
+.mod-left-split ::-webkit-scrollbar-thumb {
+  background: var(--vf-grey);
+  border-radius: 999px;
+}
+.mod-left-split ::-webkit-scrollbar-thumb:hover { background: var(--vf-pink); }
+
+/* ═══ 2. file explorer · eza --tree ══════════════════════════════════ */
+
+.mod-left-split .workspace-leaf-content[data-type="file-explorer"] .view-content {
+  background: var(--vf-bg);
+  font-family: var(--vf-mono);
+  font-size: 13.5px;
+  padding: 4px 10px 32px 8px;
+}
+
+/* header buttons → pill chips */
+.mod-left-split .nav-header {
+  background: transparent;
+  padding: 10px 10px 6px;
+  gap: 6px;
+}
+
+.mod-left-split .nav-header .nav-buttons-container { gap: 6px; }
+
+.mod-left-split .nav-header .clickable-icon {
+  border: 1px solid var(--vf-line);
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: var(--vf-dim);
+  background: transparent;
+  transition: color 120ms, border-color 120ms, background 120ms;
+}
+
+.mod-left-split .nav-header .clickable-icon:hover {
+  color: var(--vf-black);
+  background: var(--vf-pink);
+  border-color: var(--vf-pink);
+}
+
+/* the tree itself */
+.mod-left-split .nav-files-container {
+  padding-inline-start: 2px;
+  font-family: var(--vf-mono);
+}
+
+.mod-left-split .tree-item-self {
+  font-family: var(--vf-mono);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--vf-fg);
+  border-radius: 4px;
+  padding-block: 2.5px;
+  padding-inline: 4px;
+  letter-spacing: -0.005em;
+  transition: background 90ms linear, color 90ms linear;
+}
+
+.mod-left-split .tree-item-self:hover {
+  background: var(--vf-bg-hover);
+  color: var(--vf-fg);
+}
+
+.mod-left-split .tree-item-self.is-active,
+.mod-left-split .tree-item-self.has-focus {
+  background: rgba(255, 120, 165, 0.12);
+  color: var(--vf-pink-hi);
+  box-shadow: inset 2px 0 0 var(--vf-pink);
+}
+
+/* no extension tags — eza doesn't shout file types */
+.mod-left-split .nav-file-tag {
+  display: none;
+}
+
+/* folder chevrons: ❯ when closed, ▾ when open, pink like the prompt */
+.mod-left-split .nav-folder-collapse-indicator,
+.mod-left-split .collapse-icon {
+  color: var(--vf-pink);
+  opacity: 0.85;
+}
+.mod-left-split .nav-folder-collapse-indicator svg,
+.mod-left-split .collapse-icon svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* eza branch glyphs ────────────────────────────────────────────────── */
+.mod-left-split .nav-folder-title-content::before,
+.mod-left-split .nav-file-title-content::before {
+  content: "├─ ";
+  color: var(--vf-line);
+  font-family: var(--vf-mono);
+  pointer-events: none;
+  user-select: none;
+}
+
+.mod-left-split .nav-files-container > .tree-item > .tree-item-self .nav-folder-title-content::before,
+.mod-left-split .nav-files-container > .tree-item > .tree-item-self .nav-file-title-content::before {
+  content: "";
+}
+
+.mod-left-split .tree-item-children > .tree-item:last-child > .tree-item-self .nav-folder-title-content::before,
+.mod-left-split .tree-item-children > .tree-item:last-child > .tree-item-self .nav-file-title-content::before {
+  content: "└─ ";
+}
+
+/* folders, coloured by depth, cycling through the palette */
+.mod-left-split .nav-folder-title-content {
+  color: var(--vf-blue);
+  font-weight: 500;
+}
+
+.mod-left-split .tree-item-children .tree-item-children .nav-folder-title-content {
+  color: var(--vf-green);
+}
+
+.mod-left-split .tree-item-children .tree-item-children .tree-item-children .nav-folder-title-content {
+  color: var(--vf-peach);
+}
+
+.mod-left-split .tree-item-children .tree-item-children .tree-item-children .tree-item-children .nav-folder-title-content {
+  color: var(--vf-cyan);
+}
+
+.mod-left-split .tree-item-children .tree-item-children .tree-item-children .tree-item-children .tree-item-children .nav-folder-title-content {
+  color: var(--vf-pink-hi);
+}
+
+/* files, coloured by extension, the way ls --color would */
+.mod-left-split .nav-file-title .nav-file-title-content { color: var(--vf-fg); }
+.mod-left-split .nav-file-title[data-path$=".md"] .nav-file-title-content { color: var(--vf-fg); }
+.mod-left-split .nav-file-title[data-path$=".canvas"] .nav-file-title-content { color: var(--vf-cyan); }
+.mod-left-split .nav-file-title[data-path$=".base"] .nav-file-title-content { color: var(--vf-green); }
+.mod-left-split .nav-file-title[data-path$=".pdf"] .nav-file-title-content { color: var(--vf-peach); }
+.mod-left-split .nav-file-title[data-path$=".png"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".jpg"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".jpeg"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".webp"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".heic"] .nav-file-title-content { color: var(--vf-pink-hi); }
+.mod-left-split .nav-file-title[data-path$=".excalidraw"] .nav-file-title-content { color: var(--vf-cyan-hi); }
+.mod-left-split .nav-file-title[data-path$=".css"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".js"] .nav-file-title-content,
+.mod-left-split .nav-file-title[data-path$=".json"] .nav-file-title-content { color: var(--vf-blue-hi); }
+
+/* ═══ 3. the fetch block · used by vault.fetch.md ════════════════════ */
+
+.vf,
+.vf * { box-sizing: border-box; }
+.vf { font-family: var(--vf-mono); }
+
+.vf {
+  background: var(--vf-bg);
+  color: var(--vf-fg);
+  border: 1px solid var(--vf-line);
+  border-radius: 10px;
+  padding: 12px 13px 11px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  width: 100%;
+  margin: 2px 0 14px;
+  overflow: hidden;
+}
+
+.markdown-preview-view .vf,
+.markdown-reading-view .vf { max-width: none; }
+
+/* — the starship prompt bar — */
+.vf-bar {
   display: flex;
   flex-wrap: wrap;
-}
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
-  grid-column: 1 / -1;
-  grid-row: 3;
-  min-height: 0;
-  overflow-y: auto;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  line-height: 1.9;
 }
 
-/* ── counters: css counting the explorer's own rows ─────────────────── */
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title[data-path$=".md"] {
-  counter-increment: ff-files ff-notes;
-}
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title:not([data-path$=".md"]) {
-  counter-increment: ff-files ff-attach;
-}
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder:not(.mod-root) > .nav-folder-title {
-  counter-increment: ff-dirs;
-}
-/* display:none elements can't be counted, so collapsed folders stay "rendered" but clipped */
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder.is-collapsed > .nav-folder-children {
-  display: block !important;
-  height: 0;
-  overflow: hidden;
-  visibility: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-/* ── 1. the prompt pill: [ mishti ][ ~ ][ clock ] ───────────────────── */
-.workspace-leaf-content[data-type="file-explorer"]::before {
-  content: "\f179  mishti" "  ~           " "\f017  " var(--ff-hm, "--:--");
-  flex: 0 0 auto;
-  align-self: flex-start;
-  width: max-content;
-  margin: 10px 0 8px var(--ff-pad);
-  padding: 0.15em 1.4ch;
-  font-family: var(--ff-font);
-  font-size: var(--ff-fs);
-  line-height: 1.4;
-  white-space: pre;
-  color: var(--ff-bg);
+.vf-pill {
+  display: inline-block;
+  padding: 1px 9px 2px;
   border-radius: 999px;
-  background-image: linear-gradient(90deg,
-    var(--ff-magenta)  0     10ch,
-    var(--ff-yellow)   10ch  13.5ch,
-    var(--ff-green)    13.5ch 17ch,
-    var(--ff-cyan)     17ch  20ch,
-    var(--ff-blue)     20ch  23ch,
-    var(--ff-lavender) 23ch);
+  font-size: 11.5px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
-/* ❯ fastfetch, sitting right of the pill */
-.workspace-leaf-content[data-type="file-explorer"]::after {
-  content: "\276F  fastfetch";
-  position: absolute;
-  top: 10px;
-  left: calc(var(--ff-pad) + 31.8ch + 1.2ch);
-  padding-top: 0.15em;
-  font-family: var(--ff-font);
-  font-size: var(--ff-fs);
-  line-height: 1.4;
+.vf-os     { background: var(--vf-grey);      color: var(--vf-pink-hi); padding-inline: 7px; }
+.vf-user   { background: var(--vf-pink);      color: var(--vf-black); }
+.vf-path   { background: var(--vf-peach);     color: var(--vf-black); }
+.vf-clock  { background: var(--vf-blue-hi);   color: var(--vf-black); }
+.vf-pill-deco {
+  width: 8px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.vf-deco-1 { background: var(--vf-green); }
+.vf-deco-2 { background: var(--vf-peach); }
+.vf-deco-3 { background: var(--vf-pink-hi); }
+
+.vf-cmd {
+  color: var(--vf-green);
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.vf-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  margin-left: 1px;
+  background: var(--vf-pink-hi);
+  vertical-align: -1px;
+  animation: vf-blink 1.1s steps(1) infinite;
+}
+
+@keyframes vf-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* — the fastfetch rows — */
+.vf-rows {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 10px;
+  row-gap: 0;
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
+.vf-k { color: var(--vf-pink); }
+.vf-k::after { content: ""; }
+
+.vf-v { color: var(--vf-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vf-v.p { color: var(--vf-pink-hi); }
+.vf-v.g { color: var(--vf-green); }
+.vf-v.h { color: var(--vf-peach); }
+.vf-v.b { color: var(--vf-blue); }
+.vf-v.c { color: var(--vf-cyan); }
+.vf-v.d { color: var(--vf-dim); }
+.vf-v strong { font-weight: 500; color: inherit; }
+
+/* the colour swatches, as is legally required */
+.vf-swatches {
+  display: flex;
+  gap: 3px;
+  margin: 0 0 10px;
+}
+.vf-swatches span {
+  height: 7px;
+  flex: 1 1 0;
+  border-radius: 2px;
+}
+.vf-swatches span:nth-child(1)  { background: var(--vf-black);   box-shadow: inset 0 0 0 1px var(--vf-line); }
+.vf-swatches span:nth-child(2)  { background: var(--vf-pink); }
+.vf-swatches span:nth-child(3)  { background: var(--vf-green); }
+.vf-swatches span:nth-child(4)  { background: var(--vf-peach); }
+.vf-swatches span:nth-child(5)  { background: var(--vf-blue); }
+.vf-swatches span:nth-child(6)  { background: var(--vf-pink-hi); }
+.vf-swatches span:nth-child(7)  { background: var(--vf-cyan); }
+.vf-swatches span:nth-child(8)  { background: var(--vf-fg); }
+
+/* — a hand-drawn tree line, for the bottom of the block — */
+.vf-tree {
+  color: var(--vf-dim);
+  font-size: 11.5px;
+  line-height: 1.45;
+  margin: 0;
   white-space: pre;
-  color: var(--ff-green);
-  pointer-events: none;
+  overflow-x: auto;
+}
+.vf-tree .vf-br { color: var(--vf-line); }
+.vf-tree b { color: var(--vf-blue); font-weight: 500; }
+.vf-tree i { color: var(--vf-fg); font-style: normal; }
+
+/* the note hosting the fetch block in the sidebar: no title, no chrome */
+.mod-left-split .workspace-leaf-content[data-type="markdown"] .view-content {
+  background: var(--vf-bg);
+  padding: 4px 8px;
+}
+.mod-left-split .workspace-leaf-content[data-type="markdown"] .view-header {
+  display: none;
+}
+.mod-left-split .workspace-leaf-content[data-type="markdown"] .inline-title {
+  display: none;
+}
+.mod-left-split .markdown-preview-view,
+.mod-left-split .markdown-source-view { padding: 0; }
+
+/* ═══ 4. odds and ends ═══════════════════════════════════════════════ */
+
+/* search + outline panes, if you insist on having them */
+.mod-left-split .search-input-container input {
+  background: var(--vf-bg-soft);
+  border: 1px solid var(--vf-line);
+  border-radius: 6px;
+  color: var(--vf-fg);
+  font-family: var(--vf-mono);
+  font-size: 12.5px;
+}
+.mod-left-split .search-input-container input:focus {
+  border-color: var(--vf-pink);
+  box-shadow: none;
 }
 
-/* ── 2. the apple logo, rainbow banded ──────────────────────────────── */
-.workspace-leaf-content[data-type="file-explorer"] > .view-content::before {
-  grid-row: 1;
-  grid-column: 1;
-  align-self: start;
-  margin-left: var(--ff-pad);
-  font-family: var(--ff-font);
-  font-size: var(--ff-fs);
-  line-height: 1.2;
-  white-space: pre;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  background-image: linear-gradient(180deg,
-    var(--ff-green)   0      7.2em,
-    var(--ff-yellow)  7.2em  9.6em,
-    var(--ff-peach)   9.6em  12em,
-    var(--ff-red)     12em   14.4em,
-    var(--ff-magenta) 14.4em 16.8em,
-    var(--ff-blue)    16.8em);
-  content:
-    "                     ..'\A"
-    "                 ,xNMM.\A"
-    "               .OMMMMo\A"
-    "               lMM\"\A"
-    "     .;loddo:.  .olloddol;.\A"
-    "   cKMMMMMMMMMMNWMMMMMMMMMMO:\A"
-    " .KMMMMMMMMMMMMMMMMMMMMMMMWd.\A"
-    " XMMMMMMMMMMMMMMMMMMMMMMMX.\A"
-    ";MMMMMMMMMMMMMMMMMMMMMMMM:\A"
-    ":MMMMMMMMMMMMMMMMMMMMMMMM:\A"
-    ".MMMMMMMMMMMMMMMMMMMMMMMMX.\A"
-    " kMMMMMMMMMMMMMMMMMMMMMMMMWd.\A"
-    " 'XMMMMMMMMMMMMMMMMMMMMMMMMMMk\A"
-    "  'XMMMMMMMMMMMMMMMMMMMMMMMMK.\A"
-    "    kMMMMMMMMMMMMMMMMMMMMMMd\A"
-    "     ;KMMMMMMMWXXWMMMMMMMk.\A"
-    "       \"cooc*\"    \"*coo'\"";
+.mod-left-split .tree-item-inner,
+.mod-left-split .outline-item { font-family: var(--vf-mono); }
+
+/* the little "vault name" strip on top of the explorer */
+.mod-left-split .nav-files-container + .nav-header { border: 0; }
+.mod-left-split .workspace-leaf-content[data-type="file-explorer"] .nav-buttons-container {
+  border: 0;
 }
 
-/* ── 3. the info column: keys green, values white, title block green ── */
-.workspace-leaf-content[data-type="file-explorer"] > .view-content::after {
-  grid-row: 1;
-  grid-column: 2;
-  align-self: start;
-  font-family: var(--ff-font);
-  font-size: var(--ff-fs);
-  line-height: 1.5;
-  white-space: pre;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  background-image:
-    linear-gradient(var(--ff-green), var(--ff-green)),
-    linear-gradient(90deg, var(--ff-green) 0 10ch, transparent 10ch),
-    linear-gradient(var(--ff-fg), var(--ff-fg));
-  background-size: 100% 3em, 100% 100%, 100% 100%;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  content:
-    "mishti@" var(--ff-vault, "vault") "\A"
-    "------------------------\A"
-    "notes:    " var(--ff-notes, counter(ff-notes)) "\A"
-    "files:    " var(--ff-files, counter(ff-files)) "\A"
-    "folders:  " var(--ff-dirs, counter(ff-dirs)) "\A"
-    "attach:   " var(--ff-attach, counter(ff-attach)) "\A"
-    "links:    " var(--ff-links, "n/a") "\A"
-    "tags:     " var(--ff-tags, "n/a") "\A"
-    "disk:     " var(--ff-disk, "n/a") "\A"
-    "date:     " var(--ff-date, "-- --- ----") "\A"
-    "day:      " var(--ff-day, "---") "\A"
-    "time:     " var(--ff-time, "--:--:--") "\A"
-    "uptime:   " var(--ff-up, "n/a") "\A"
-    "theme:    ghostty-pink (dark)\A"
-    "font:     CMU Typewriter Text\A"
-    "cursor:   bar #ffa6c9";
+/* links inside the fetch note */
+.vf a,
+.vf a.internal-link,
+.vf a.external-link {
+  color: var(--vf-cyan);
+  text-decoration: none;
+  border: 0;
 }
-
-/* ── 4. the 16-colour palette strip ─────────────────────────────────── */
-.workspace-leaf-content[data-type="file-explorer"] .nav-header::before {
-  content: "";
-  order: -1;
-  flex: 0 0 100%;
-  height: 2.6em;
-  margin: 6px 0 8px;
-  font-family: var(--ff-font);
-  font-size: var(--ff-fs);
-  background-image:
-    linear-gradient(90deg,
-      var(--ff-black-b) 0 3ch, var(--ff-magenta) 3ch 6ch, var(--ff-green-b) 6ch 9ch, var(--ff-yellow-b) 9ch 12ch,
-      #c9dfff 12ch 15ch, var(--ff-magenta-b) 15ch 18ch, var(--ff-cyan-b) 18ch 21ch, #ffffff 21ch 24ch),
-    linear-gradient(90deg,
-      var(--ff-bg) 0 3ch, var(--ff-red) 3ch 6ch, var(--ff-green) 6ch 9ch, var(--ff-yellow) 9ch 12ch,
-      var(--ff-blue) 12ch 15ch, var(--ff-magenta) 15ch 18ch, var(--ff-cyan) 18ch 21ch, var(--ff-fg) 21ch 24ch);
-  background-size: 24ch 1.3em;
-  background-repeat: no-repeat;
-  background-position: calc(var(--ff-pad) + var(--ff-info-x)) 1.3em, calc(var(--ff-pad) + var(--ff-info-x)) 0;
-}
-
-/* ── narrow sidebar: drop the logo, keep the info ───────────────────── */
-@container (max-width: 340px) {
-  .workspace-leaf-content[data-type="file-explorer"] > .view-content {
-    grid-template-columns: 0 1fr;
-    column-gap: 0;
-    --ff-info-x: 0px;
-  }
-  .workspace-leaf-content[data-type="file-explorer"] > .view-content::before {
-    display: none;
-  }
-  .workspace-leaf-content[data-type="file-explorer"] > .view-content::after {
-    margin-left: var(--ff-pad);
-  }
-}
+.vf a:hover { color: var(--vf-pink-hi); }
