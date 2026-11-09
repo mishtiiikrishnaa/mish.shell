@@ -251,6 +251,43 @@ settings:
         label: off
         value: none
   -
+    id: rb-h-layout
+    title: layout
+    type: heading
+    level: 1
+    collapsed: true
+  -
+    id: rb-tabs
+    title: tab bar
+    description: compact is safari's compact tab bar, one capsule with the open note as the big pill and the others small. dots shrinks the other tabs to a dot until you point at them. cards is the older look with separate little cards.
+    type: class-select
+    allowEmpty: false
+    default: rb-tabs-compact
+    options:
+      -
+        label: compact (safari style)
+        value: rb-tabs-compact
+      -
+        label: dots
+        value: rb-tabs-dots
+      -
+        label: cards
+        value: rb-tabs-cards
+  -
+    id: rb-vault
+    title: vault switcher
+    description: prompt turns the bottom-left corner into a small starship prompt. classic is just the vault name.
+    type: class-select
+    allowEmpty: false
+    default: rb-vault-prompt
+    options:
+      -
+        label: prompt
+        value: rb-vault-prompt
+      -
+        label: classic
+        value: rb-vault-classic
+  -
     id: rb-h-colours
     title: colours
     type: heading
@@ -263,7 +300,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#ff78a5'
-    default-light: '#d6336c'
+    default-light: '#e8508a'
   -
     id: rb-pink-hi
     title: pink, soft
@@ -271,7 +308,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#ffa6c9'
-    default-light: '#e8578f'
+    default-light: '#ff8fb8'
   -
     id: rb-peach
     title: peach
@@ -279,7 +316,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#ffd6a6'
-    default-light: '#e0802b'
+    default-light: '#ffb27a'
   -
     id: rb-yellow
     title: yellow
@@ -287,7 +324,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#fff1a8'
-    default-light: '#c49300'
+    default-light: '#ffd54f'
   -
     id: rb-green
     title: green
@@ -295,7 +332,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#c9ffa6'
-    default-light: '#3d9f4a'
+    default-light: '#8ee07f'
   -
     id: rb-blue
     title: blue
@@ -303,7 +340,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#a6c9ff'
-    default-light: '#3a7bd8'
+    default-light: '#82b4ff'
   -
     id: rb-lilac
     title: lilac
@@ -311,7 +348,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#c9b0ff'
-    default-light: '#8758ee'
+    default-light: '#b79bff'
   -
     id: rb-cyan
     title: cyan
@@ -319,7 +356,7 @@ settings:
     format: hex
     opacity: false
     default-dark: '#a6fff0'
-    default-light: '#0f9d8c'
+    default-light: '#6fe0cf'
 */
 
 /* ═══ bundled fonts ═══ */
@@ -366,16 +403,18 @@ settings:
 
 .theme-light {
   color-scheme: light;
-  --rb-pink:    #d6336c;
-  --rb-pink-hi: #e8578f;
-  --rb-peach:   #e0802b;
-  --rb-yellow:  #c49300;
-  --rb-green:   #3d9f4a;
-  --rb-blue:    #3a7bd8;
-  --rb-lilac:   #8758ee;
-  --rb-cyan:    #0f9d8c;
-  --rb-ink:     #ffffff;
-  --rb-line:    #e6dde4;
+  /* fills: soft sorbet colours for pills, tracks and gradients (dark ink on top).
+     text and icons use the deeper --rb-t* versions made from these below. */
+  --rb-pink:    #e8508a;
+  --rb-pink-hi: #ff8fb8;
+  --rb-peach:   #ffb27a;
+  --rb-yellow:  #ffd54f;
+  --rb-green:   #8ee07f;
+  --rb-blue:    #82b4ff;
+  --rb-lilac:   #b79bff;
+  --rb-cyan:    #6fe0cf;
+  --rb-ink:     #2a2430;
+  --rb-line:    #e4dbe1;
 }
 
 body {
@@ -405,6 +444,62 @@ body {
   --vf-tree-line: color-mix(in srgb, var(--text-normal) 28%, transparent);
   --vf-mono:    var(--font-monospace);
 }
+
+/* text-safe colours: the same hues, used wherever the colour is text or a thin
+   line (headings, links, tags, code, tree names). on dark they equal the
+   fills; on light they are the same hue at a fixed, readable lightness. */
+body {
+  --rb-t0: var(--rb-c0);
+  --rb-t1: var(--rb-c1);
+  --rb-t2: var(--rb-c2);
+  --rb-t3: var(--rb-c3);
+  --rb-t4: var(--rb-c4);
+  --rb-t5: var(--rb-c5);
+  --rb-tp: var(--rb-pink);
+  --rb-tcy: var(--rb-cyan);
+}
+.theme-light {
+  --rb-t0: color-mix(in oklab, var(--rb-c0), black 40%);
+  --rb-t1: color-mix(in oklab, var(--rb-c1), black 42%);
+  --rb-t2: color-mix(in oklab, var(--rb-c2), black 50%);
+  --rb-t3: color-mix(in oklab, var(--rb-c3), black 48%);
+  --rb-t4: color-mix(in oklab, var(--rb-c4), black 40%);
+  --rb-t5: color-mix(in oklab, var(--rb-c5), black 38%);
+  --rb-tp: color-mix(in oklab, var(--rb-pink), black 6%);
+  --rb-tcy: color-mix(in oklab, var(--rb-cyan), black 50%);
+}
+@supports (color: oklch(from red l c h)) {
+  .theme-light {
+    --rb-t0: oklch(from var(--rb-c0) 0.62 0.19 h);
+    --rb-t1: oklch(from var(--rb-c1) 0.66 0.15 h);
+    --rb-t2: oklch(from var(--rb-c2) 0.68 0.13 h);
+    --rb-t3: oklch(from var(--rb-c3) 0.62 0.16 h);
+    --rb-t4: oklch(from var(--rb-c4) 0.60 0.17 h);
+    --rb-t5: oklch(from var(--rb-c5) 0.58 0.19 h);
+    --rb-tp: oklch(from var(--rb-pink) 0.60 0.20 h);
+    --rb-tcy: oklch(from var(--rb-cyan) 0.64 0.11 h);
+  }
+}
+
+/* the plugins use one set of colours for both pills and text. on light we hand
+   them the text-safe set, and put the soft fills back on the pills. */
+.theme-light {
+  --vf-pink:    var(--rb-tp);
+  --vf-pink-hi: var(--rb-t0);
+  --vf-peach:   var(--rb-t1);
+  --vf-yellow:  var(--rb-t2);
+  --vf-green:   var(--rb-t3);
+  --vf-blue:    var(--rb-t4);
+  --vf-lilac:   var(--rb-t5);
+  --vf-cyan:    var(--rb-tcy);
+}
+.theme-light :is(.vf-user, .ez-user, .vf-cursor, .ez-caret) { background: var(--rb-c0); }
+.theme-light :is(.vf-path, .ez-path)                        { background: var(--rb-c1); }
+.theme-light :is(.vf-ch1, .ez-git)                          { background: var(--rb-c2); }
+.theme-light :is(.vf-ch2, .ez-node)                         { background: var(--rb-c3); }
+.theme-light :is(.vf-ch3, .ez-seg.ez-ch)                    { background: var(--rb-c4); }
+.theme-light :is(.vf-clock, .ez-clock)                      { background: var(--rb-c5); }
+.theme-light .ez-row:hover .ez-name { background: rgba(60, 30, 50, 0.07); }
 
 /* ═══════════════════════════════════════════════════════════════════════
    2 · fonts
@@ -517,8 +612,8 @@ body {
   --text-faint:  #6d6d7a;
   --text-on-accent: #0f0f12;
   --text-error:   var(--rb-pink);
-  --text-success: var(--rb-green);
-  --text-warning: var(--rb-peach);
+  --text-success: var(--rb-t3);
+  --text-warning: var(--rb-t1);
   --text-selection: rgba(201, 176, 255, 0.28);
   --text-highlight-bg: rgba(255, 241, 168, 0.22);
 
@@ -533,15 +628,15 @@ body {
 
 .theme-light {
   --accent-h: 338;
-  --accent-s: 68%;
-  --accent-l: 50%;
+  --accent-s: 77%;
+  --accent-l: 60%;
 
-  --background-primary:       #fffafc;
-  --background-primary-alt:   #faf2f6;
-  --background-secondary:     #f6eef3;
-  --background-secondary-alt: #efe5ec;
-  --background-modifier-border:        #e6dde4;
-  --background-modifier-border-hover:  #d6c9d2;
+  --background-primary:       #fffcfd;
+  --background-primary-alt:   #f8f3f6;
+  --background-secondary:     #f4eef2;
+  --background-secondary-alt: #ece4ea;
+  --background-modifier-border:        #e4dbe1;
+  --background-modifier-border-hover:  #d3c7cf;
   --background-modifier-border-focus:  var(--rb-pink);
   --background-modifier-hover:         rgba(60, 30, 50, 0.06);
   --background-modifier-active-hover:  rgba(214, 51, 108, 0.12);
@@ -554,35 +649,35 @@ body {
   --text-faint:  #9b8fa2;
   --text-on-accent: #ffffff;
   --text-error:   #c92a55;
-  --text-success: var(--rb-green);
-  --text-warning: var(--rb-peach);
+  --text-success: var(--rb-t3);
+  --text-warning: var(--rb-t1);
   --text-selection: rgba(135, 88, 238, 0.2);
   --text-highlight-bg: rgba(255, 220, 90, 0.4);
 
   --interactive-normal: #f3e9f0;
   --interactive-hover:  #ebdfe8;
 
-  --tab-container-background: #efe5ec;
-  --titlebar-background: #efe5ec;
-  --titlebar-background-focused: #f6eef3;
+  --tab-container-background: #ece4ea;
+  --titlebar-background: #ece4ea;
+  --titlebar-background-focused: #f4eef2;
   --scrollbar-bg: transparent;
 }
 
 body {
-  --text-accent:       var(--rb-pink-hi);
-  --text-accent-hover: var(--rb-pink);
+  --text-accent:       var(--rb-t0);
+  --text-accent-hover: var(--rb-tp);
   --interactive-accent:       var(--rb-pink);
   --interactive-accent-hover: var(--rb-pink-hi);
   --caret-color: var(--rb-pink-hi);
 
-  --link-color:            var(--rb-blue);
-  --link-color-hover:      var(--rb-lilac);
-  --link-unresolved-color: var(--rb-peach);
+  --link-color:            var(--rb-t4);
+  --link-color-hover:      var(--rb-t5);
+  --link-unresolved-color: var(--rb-t1);
   --link-unresolved-opacity: 0.8;
-  --link-external-color:       var(--rb-cyan);
-  --link-external-color-hover: var(--rb-green);
-  --tag-color: var(--rb-green);
-  --tag-color-hover: var(--rb-green);
+  --link-external-color:       var(--rb-tcy);
+  --link-external-color-hover: var(--rb-t3);
+  --tag-color: var(--rb-t3);
+  --tag-color-hover: var(--rb-t3);
   --tag-background: color-mix(in srgb, var(--rb-green) 12%, transparent);
   --tag-background-hover: color-mix(in srgb, var(--rb-green) 22%, transparent);
   --tag-border-width: 1px;
@@ -596,9 +691,9 @@ body {
   --blockquote-border-thickness: 3px;
   --blockquote-color: var(--text-muted);
   --hr-color: transparent;
-  --list-marker-color: var(--rb-peach);
-  --list-marker-color-collapsed: var(--rb-pink);
-  --list-marker-color-hover: var(--rb-pink-hi);
+  --list-marker-color: var(--rb-t1);
+  --list-marker-color-collapsed: var(--rb-tp);
+  --list-marker-color-hover: var(--rb-t0);
   --bold-color: var(--text-normal);
   --italic-color: var(--text-normal);
 
@@ -619,17 +714,17 @@ body {
   /* code */
   --code-size: 0.9em;
   --code-background: color-mix(in srgb, var(--text-normal) 6%, var(--background-primary));
-  --code-normal: var(--rb-cyan);
+  --code-normal: var(--rb-tcy);
   --code-comment: var(--text-faint);
   --code-punctuation: var(--text-muted);
-  --code-keyword: var(--rb-pink);
-  --code-function: var(--rb-blue);
-  --code-string: var(--rb-green);
-  --code-value: var(--rb-lilac);
-  --code-property: var(--rb-cyan);
-  --code-tag: var(--rb-pink-hi);
-  --code-operator: var(--rb-yellow);
-  --code-important: var(--rb-peach);
+  --code-keyword: var(--rb-tp);
+  --code-function: var(--rb-t4);
+  --code-string: var(--rb-t3);
+  --code-value: var(--rb-t5);
+  --code-property: var(--rb-tcy);
+  --code-tag: var(--rb-t0);
+  --code-operator: var(--rb-t2);
+  --code-important: var(--rb-t1);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -638,12 +733,12 @@ body {
    ═══════════════════════════════════════════════════════════════════════ */
 
 body {
-  --h1-color: color-mix(in srgb, var(--rb-c0) var(--rb-headers, 100%), var(--text-normal));
-  --h2-color: color-mix(in srgb, var(--rb-c1) var(--rb-headers, 100%), var(--text-normal));
-  --h3-color: color-mix(in srgb, var(--rb-c2) var(--rb-headers, 100%), var(--text-normal));
-  --h4-color: color-mix(in srgb, var(--rb-c3) var(--rb-headers, 100%), var(--text-normal));
-  --h5-color: color-mix(in srgb, var(--rb-c4) var(--rb-headers, 100%), var(--text-normal));
-  --h6-color: color-mix(in srgb, var(--rb-c5) var(--rb-headers, 100%), var(--text-normal));
+  --h1-color: color-mix(in srgb, var(--rb-t0) var(--rb-headers, 100%), var(--text-normal));
+  --h2-color: color-mix(in srgb, var(--rb-t1) var(--rb-headers, 100%), var(--text-normal));
+  --h3-color: color-mix(in srgb, var(--rb-t2) var(--rb-headers, 100%), var(--text-normal));
+  --h4-color: color-mix(in srgb, var(--rb-t3) var(--rb-headers, 100%), var(--text-normal));
+  --h5-color: color-mix(in srgb, var(--rb-t4) var(--rb-headers, 100%), var(--text-normal));
+  --h6-color: color-mix(in srgb, var(--rb-t5) var(--rb-headers, 100%), var(--text-normal));
   --inline-title-color: var(--text-normal);
 }
 
@@ -665,6 +760,13 @@ body {
           background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.theme-light :is(.inline-title, .modal-title, .vertical-tab-header-group-title, .setting-item-heading .setting-item-name),
+.theme-light.rb-crumbs-text .view-header-title,
+.theme-light.rb-crumbs-plain .view-header-title {
+  filter: brightness(0.8) saturate(1.5);
+}
+.theme-light :is(.markdown-rendered hr, .cm-line hr) { opacity: 1; }
 
 /* a gradient only reads as a rainbow if the box hugs the text */
 .inline-title {
@@ -698,22 +800,22 @@ body {
 }
 
 /* colour by position: breadcrumbs sit at the odd child slots, the "/" between them at the even ones */
-.view-header-breadcrumb:nth-child(12n+1)  { --c: var(--rb-c0); }
-.view-header-breadcrumb:nth-child(12n+3)  { --c: var(--rb-c1); }
-.view-header-breadcrumb:nth-child(12n+5)  { --c: var(--rb-c2); }
-.view-header-breadcrumb:nth-child(12n+7)  { --c: var(--rb-c3); }
-.view-header-breadcrumb:nth-child(12n+9)  { --c: var(--rb-c4); }
-.view-header-breadcrumb:nth-child(12n+11) { --c: var(--rb-c5); }
-.view-header-breadcrumb-separator:nth-child(12n+2)  { --c: var(--rb-c0); }
-.view-header-breadcrumb-separator:nth-child(12n+4)  { --c: var(--rb-c1); }
-.view-header-breadcrumb-separator:nth-child(12n+6)  { --c: var(--rb-c2); }
-.view-header-breadcrumb-separator:nth-child(12n+8)  { --c: var(--rb-c3); }
-.view-header-breadcrumb-separator:nth-child(12n+10) { --c: var(--rb-c4); }
-.view-header-breadcrumb-separator:nth-child(12n+12) { --c: var(--rb-c5); }
+.view-header-breadcrumb:nth-child(12n+1) { --c: var(--rb-c0); --ct: var(--rb-t0); }
+.view-header-breadcrumb:nth-child(12n+3) { --c: var(--rb-c1); --ct: var(--rb-t1); }
+.view-header-breadcrumb:nth-child(12n+5) { --c: var(--rb-c2); --ct: var(--rb-t2); }
+.view-header-breadcrumb:nth-child(12n+7) { --c: var(--rb-c3); --ct: var(--rb-t3); }
+.view-header-breadcrumb:nth-child(12n+9) { --c: var(--rb-c4); --ct: var(--rb-t4); }
+.view-header-breadcrumb:nth-child(12n+11) { --c: var(--rb-c5); --ct: var(--rb-t5); }
+.view-header-breadcrumb-separator:nth-child(12n+2)  { --c: var(--rb-c0); --ct: var(--rb-t0); }
+.view-header-breadcrumb-separator:nth-child(12n+4)  { --c: var(--rb-c1); --ct: var(--rb-t1); }
+.view-header-breadcrumb-separator:nth-child(12n+6)  { --c: var(--rb-c2); --ct: var(--rb-t2); }
+.view-header-breadcrumb-separator:nth-child(12n+8)  { --c: var(--rb-c3); --ct: var(--rb-t3); }
+.view-header-breadcrumb-separator:nth-child(12n+10) { --c: var(--rb-c4); --ct: var(--rb-t4); }
+.view-header-breadcrumb-separator:nth-child(12n+12) { --c: var(--rb-c5); --ct: var(--rb-t5); }
 
 .view-header-breadcrumb,
 .view-header-breadcrumb-separator {
-  color: var(--c, var(--rb-c0));
+  color: var(--ct, var(--rb-t0));
   opacity: 1;
 }
 
@@ -901,7 +1003,7 @@ input[type="submit"] {
    ═══════════════════════════════════════════════════════════════════════ */
 
 body:not(.rb-icons-plain) .svg-icon {
-  stroke: url(#mish-rainbow) var(--rb-pink-hi);
+  stroke: url(#mish-rainbow) var(--rb-t0);
   filter: hue-rotate(var(--rb-hue, 0deg));
 }
 
@@ -915,6 +1017,10 @@ body:not(.rb-icons-plain):not(.rb-icons-same) :is(.clickable-icon, .side-dock-ri
   filter: hue-rotate(var(--rb-hue, 0deg)) brightness(1.18) saturate(1.1);
 }
 
+.theme-light :is(.clickable-icon, .side-dock-ribbon-action, .nav-action-button, .menu-item, .workspace-tab-header):hover .svg-icon {
+  filter: hue-rotate(var(--rb-hue, 0deg)) brightness(0.82) saturate(1.2);
+}
+
 /* icons inside notes and callouts keep their own colour */
 body :is(.markdown-source-view, .markdown-preview-view, .markdown-embed, .canvas-node-content, .callout) .svg-icon {
   stroke: currentColor;
@@ -925,7 +1031,7 @@ body :is(.markdown-source-view, .markdown-preview-view, .markdown-embed, .canvas
 .mish-fetch-ribbon svg,
 .workspace-tab-header[data-type="tv-fetch-view"] .workspace-tab-header-inner-icon svg,
 .workspace-tab-header[data-type="file-explorer"] .workspace-tab-header-inner-icon svg {
-  stroke: url(#mish-rainbow) var(--rb-pink-hi) !important;
+  stroke: url(#mish-rainbow) var(--rb-t0) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -972,15 +1078,27 @@ body {
   --toggle-s-width: 38px;
 }
 
-/* ═══ tabs, safari style ═══
-   a quiet bar, the active tab lifted like a card, titles centred, the close
-   button on the left and only on hover, and a small dot in front of each
-   title like a favicon (the active tab's is the whole rainbow). */
+/* ═══ tabs, safari compact style ═══
+   one quiet capsule holds all the tabs, like safari's compact tab bar: the
+   note you are on is the big raised pill (safari's address field), the other
+   tabs are small and share what is left. titles centred, the close button on
+   the left and only on hover, and a small dot in front of each title like a
+   favicon (the active tab's is the whole rainbow).
+   style settings → layout → tab bar picks the look:
+     compact  the default: the capsule described above
+     dots     the same, but the other tabs shrink to just their dot until hovered
+     cards    the older look: separate little cards, no capsule
+   (with style settings not installed you get compact.) */
 
+body {
+  --rb-chip-fill: color-mix(in srgb, var(--text-normal) 11%, var(--background-primary));
+}
+body.theme-light { --rb-chip-fill: color-mix(in srgb, #fff 78%, var(--background-primary)); }
 body {
   --tab-background-active: var(--background-primary);
   --tab-divider-color: transparent;
   --tab-outline-width: 0px;
+  --rb-track: color-mix(in srgb, var(--text-normal) 7%, transparent);
 }
 
 /* drop obsidian's own curved tab edges */
@@ -988,6 +1106,7 @@ body {
 .workspace-tabs.mod-top .workspace-tab-header::after { display: none; }
 
 .workspace-tabs.mod-top .workspace-tab-header {
+  position: relative;
   align-self: center;
   height: calc(var(--header-height, 40px) - 12px);
   margin: 0 1px;
@@ -1022,6 +1141,9 @@ body {
 }
 .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-inner-title {
   flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
 }
 .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-inner-close-button {
@@ -1059,6 +1181,185 @@ body {
 .mod-root .workspace-tab-header:nth-child(6n+5) { --tdot: var(--rb-c4); }
 .mod-root .workspace-tab-header:nth-child(6n+6) { --tdot: var(--rb-c5); }
 
+/* ── compact and dots: the capsule ──
+   everything from here down is skipped by the "cards" look. */
+
+/* the track every tab sits in */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-container-inner {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: center;
+  height: calc(var(--header-height, 40px) - 8px);
+  margin: 0 4px 0 8px;
+  padding: 3px;
+  gap: 3px;
+  background: var(--rb-track);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-normal) 7%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.22);
+}
+
+/* obsidian's spacer (between + and the tab list) was splitting the free room
+   50/50 with the capsule, hence the half-width bar and the gap. let the capsule have it. */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-spacer {
+  flex: 0 0 0;
+  min-width: 0;
+}
+
+/* round tabs everywhere in the capsule (obsidian draws hover fills on the inner element) */
+body:not(.rb-tabs-cards) {
+  --tab-radius: 999px;
+  --tab-radius-active: 999px;
+}
+
+/* the other tabs share what is left, small */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 34px;
+  max-width: 150px;
+  height: auto;
+  align-self: stretch;
+  margin: 0;
+  border-radius: 999px;
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-inner {
+  padding: 0 10px;
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):hover .workspace-tab-header-inner {
+  padding-left: 24px;
+}
+
+/* the open note is the big pill: it takes five shares to the others' one */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
+  flex: 5 1 0;
+  min-width: 120px;
+  max-width: none;
+  background-color: color-mix(in srgb, var(--text-normal) 11%, var(--background-primary));
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.4),
+    0 0 0 1px color-mix(in srgb, var(--text-normal) 10%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 9%, transparent);
+}
+body.theme-light:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
+  background-color: color-mix(in srgb, #fff 78%, var(--background-primary));
+  box-shadow:
+    0 1px 3px rgba(60, 30, 50, 0.18),
+    0 0 0 1px var(--background-modifier-border),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner {
+  padding: 0 28px;
+  background-image: none;            /* no underline in the capsule: the rainbow dot is the accent */
+}
+
+
+/* a hairline between neighbours, gone next to the active or hovered tab (like safari) */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):not(:hover):not(:last-child):not(:has(+ .workspace-tab-header:is(.is-active, :hover)))::after {
+  content: "";
+  display: block;
+  position: absolute;
+  right: -2px;
+  top: 9px;
+  bottom: 9px;
+  width: 1px;
+  background: var(--background-modifier-border);
+}
+
+/* ═══ rainbow chips ═══
+   the + , the tab list, the open tab's ✕ and the vault's help and settings are
+   round buttons with a rainbow ring; point at one and it fills with the
+   rainbow and the icon turns to ink. */
+
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-new-tab .clickable-icon,
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-tab-list .clickable-icon {
+  --chip-fill: var(--tab-container-background, var(--background-secondary));
+  width: 26px;
+  height: 26px;
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
+  --chip-fill: var(--rb-chip-fill);
+  left: 7px;
+  width: 18px;
+  height: 18px;
+}
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
+  --chip-fill: var(--background-secondary);
+}
+
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-new-tab .clickable-icon,
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-tab-list .clickable-icon,
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button,
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1.5px solid transparent;
+  border-radius: 50%;
+  box-shadow: none;
+  background:
+    linear-gradient(var(--chip-fill), var(--chip-fill)) padding-box,
+    var(--rb-gradient-h) border-box;
+  transition: filter 120ms ease;
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-new-tab .clickable-icon:hover,
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-tab-list .clickable-icon:hover,
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover,
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover {
+  background: var(--rb-gradient-h) border-box;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--rb-pink) 45%, transparent));
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-new-tab .clickable-icon:hover .svg-icon,
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-tab-list .clickable-icon:hover .svg-icon,
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover .svg-icon,
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover .svg-icon {
+  stroke: var(--rb-ink) !important;
+  filter: none !important;
+}
+body:not(.rb-tabs-cards) .mod-root .workspace-tab-header-inner-close-button .svg-icon {
+  width: 10px;
+  height: 10px;
+  stroke-width: 3px;
+}
+
+/* the close button only exists on the open tab. on the small tabs it used to sit
+   invisibly over the whole tab, so clicking a tab closed it. close the others with
+   middle-click, cmd+w or the right-click menu. */
+body:not(.rb-tabs-cards) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+  display: none;
+}
+
+/* ── dots: the other tabs shrink to their dot, and open when you point at them ── */
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active) {
+  flex: 0 0 30px;
+  min-width: 0;
+  max-width: none;
+  overflow: hidden;
+  transition: flex-basis 160ms ease, background-color 120ms ease;
+}
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):hover {
+  flex-basis: 150px;
+}
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):not(:hover) .workspace-tab-header-inner {
+  padding: 0;
+}
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):not(:hover) .workspace-tab-header-inner-title {
+  font-size: 0;
+}
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):not(:hover) .workspace-tab-header-inner-title::before {
+  margin-right: 0;
+}
+body.rb-tabs-dots .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):not(:hover) :is(.workspace-tab-header-inner-icon, .workspace-tab-header-status-container) {
+  display: none;
+}
+
 
 /* a gradient edge on whichever divider you're dragging */
 .workspace-leaf-resize-handle:hover,
@@ -1076,8 +1377,6 @@ button.mod-cta,
 }
 button.mod-cta:hover,
 .mod-cta:hover { filter: brightness(1.08); }
-.theme-light button.mod-cta,
-.theme-light .mod-cta { color: #fff; }
 
 /* toggle switches: the whole rainbow along the track when on */
 .checkbox-container {
@@ -1112,10 +1411,122 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .menu-separator { border-top: 1px solid var(--background-modifier-border); }
 
-/* vault name at the bottom-left */
-.workspace-drawer-vault-name,
-.workspace-sidedock-vault-profile .workspace-drawer-vault-name {
-  color: var(--rb-peach);
+/* ═══ vault switcher, as a prompt ═══
+   the bottom-left corner becomes a small starship prompt in a quiet card: the
+   vault name is the first pill (pink, with the arrow tip), the chevrons that
+   open the vault menu are the last (lilac), and help and settings are round
+   buttons that light up in their own colour. the classic look (just the
+   name in peach text) is under style settings → layout → vault switcher.
+   obsidian draws the vault menu itself, so that stays the theme's soft menu. */
+
+body:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
+  box-sizing: border-box;            /* width + margin used to push the card past the sidebar's right edge */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: calc(100% - 16px);
+  margin: 4px 8px 8px;
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--text-normal) 5%, transparent);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent),
+    0 8px 20px -12px rgba(0, 0, 0, 0.65);
+}
+
+/* the two pills: name, then chevrons (order keeps them that way whatever obsidian's own order is) */
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  order: 1;
+  height: 22px;
+  padding: 0;
+  gap: 0;
+  background: transparent;
+  border-radius: 0;
+  cursor: pointer;
+  transition: filter 120ms ease, transform 80ms ease;
+}
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover {
+  background: transparent;
+  filter: brightness(1.08) saturate(1.1) drop-shadow(0 0 7px color-mix(in srgb, var(--rb-pink) 50%, transparent));
+}
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher:active { transform: translateY(1px); }
+
+body:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name,
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
+  order: 1;
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 22px;
+  padding: 0 14px 0 11px;
+  font-size: 11.5px;
+  line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--rb-ink);
+  background: linear-gradient(90deg, var(--rb-c0), var(--rb-c1));
+  border-radius: 11px 0 0 11px;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
+}
+/* a prompt path: ~/vault */
+body:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before {
+  content: "~/";
+  opacity: 0.6;
+}
+
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 22px;
+  margin: 0 0 0 -7px;
+  padding: 0 4px 0 9px;
+  color: var(--rb-ink);
+  background: linear-gradient(90deg, var(--rb-c4), var(--rb-c5));
+  border-radius: 0 11px 11px 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 8px 50%);
+}
+body:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-icon {
+  width: 13px;
+  height: 13px;
+  stroke: var(--rb-ink);
+  filter: none;
+}
+
+/* help and settings: round, each lights up in its own colour */
+/* the wrapper steps aside so help and settings can sit either side of the prompt */
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions {
+  display: contents;
+}
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(1) { order: 0; }
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(2) { order: 2; }
+body:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  /* ring and hover fill come from the rainbow chips section above */
+}
+
+/* classic: just the name, in peach */
+body.rb-vault-classic .workspace-drawer-vault-name,
+body.rb-vault-classic .workspace-sidedock-vault-profile .workspace-drawer-vault-name {
+  color: var(--rb-t1);
 }
 
 /* ═══ thin rainbow scrollbars (same 3-4px strip the plugins draw) ═══ */
@@ -1140,29 +1551,29 @@ input[type="range"]::-webkit-slider-thumb {
    ═══════════════════════════════════════════════════════════════════════ */
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-title-content { color: var(--rb-c0); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-title-content { color: var(--rb-t0); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c1); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t1); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c2); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t2); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c3); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t3); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c4); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t4); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c5); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t5); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c0); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t0); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c1); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t1); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c2); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t2); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c3); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t3); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c4); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t4); }
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-file-title-content,
-.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-c5); }
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-children .nav-folder-title-content { color: var(--rb-t5); }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -1208,16 +1619,16 @@ a.tag { padding: 0.1em 0.6em; }
    in the graph's own settings (hex values are in the readme).
    ═══════════════════════════════════════════════════════════════════════ */
 
-.graph-view.color-fill               { color: var(--rb-pink-hi); }
-.graph-view.color-fill-focused       { color: var(--rb-lilac); }
-.graph-view.color-fill-tag           { color: var(--rb-green); }
-.graph-view.color-fill-attachment    { color: var(--rb-blue); }
-.graph-view.color-fill-unresolved    { color: var(--rb-peach); }
-.graph-view.color-fill-highlight     { color: var(--rb-yellow); }
-.graph-view.color-circle             { color: var(--rb-pink); }
-.graph-view.color-line               { color: color-mix(in srgb, var(--rb-blue) 40%, var(--background-primary)); }
-.graph-view.color-line-highlight     { color: var(--rb-peach); }
-.graph-view.color-arrow              { color: var(--rb-lilac); }
+.graph-view.color-fill               { color: var(--rb-t0); }
+.graph-view.color-fill-focused       { color: var(--rb-t5); }
+.graph-view.color-fill-tag           { color: var(--rb-t3); }
+.graph-view.color-fill-attachment    { color: var(--rb-t4); }
+.graph-view.color-fill-unresolved    { color: var(--rb-t1); }
+.graph-view.color-fill-highlight     { color: var(--rb-t2); }
+.graph-view.color-circle             { color: var(--rb-tp); }
+.graph-view.color-line               { color: color-mix(in srgb, var(--rb-t4) 45%, var(--background-primary)); }
+.graph-view.color-line-highlight     { color: var(--rb-t1); }
+.graph-view.color-arrow              { color: var(--rb-t5); }
 .graph-view.color-text               { color: var(--text-muted); }
 
 /* the graph's settings panel */
@@ -1226,8 +1637,8 @@ a.tag { padding: 0.1em 0.6em; }
   border: 1px solid var(--background-modifier-border);
   border-radius: 12px;
 }
-.graph-control-section .tree-item-self { color: var(--rb-peach); }
-.graph-control-section.mod-display .tree-item-self { color: var(--rb-green); }
-.graph-control-section.mod-forces .tree-item-self  { color: var(--rb-blue); }
-.graph-control-section.mod-groups .tree-item-self  { color: var(--rb-lilac); }
-.graph-control-section.mod-filter .tree-item-self  { color: var(--rb-pink-hi); }
+.graph-control-section .tree-item-self { color: var(--rb-t1); }
+.graph-control-section.mod-display .tree-item-self { color: var(--rb-t3); }
+.graph-control-section.mod-forces .tree-item-self  { color: var(--rb-t4); }
+.graph-control-section.mod-groups .tree-item-self  { color: var(--rb-t5); }
+.graph-control-section.mod-filter .tree-item-self  { color: var(--rb-t0); }
