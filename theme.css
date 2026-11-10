@@ -1,5 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════
    mish.shell 1.4 · an obsidian theme (terminal edition)
+   1.4.3: vault corner rebuilt in both styles (text = a prompt line, powerline = one status line, laid out on a
+   grid so nothing depends on flex order), sidebar tabs lose the rainbow capsule, and in text mode the open
+   sidebar tab is just its name, underlined, like the plugins' own footer.
+
    1.4.2: sidebar tab words fixed, powerline vault is a status line, backlink headers are segments with
    context when empty, the selected line is visible, settings selections match the icon setting.
 
@@ -1341,7 +1345,7 @@ body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stac
 }
 
 /* ═══ rainbow chips ═══
-   the + , the tab list, the open tab's ✕ and the vault's help and settings are
+   the + , the tab list and the open tab's ✕ are
    round buttons with a rainbow ring; point at one and it fills with the
    rainbow and the icon turns to ink. */
 
@@ -1357,14 +1361,10 @@ body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stac
   width: 18px;
   height: 18px;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
-  --chip-fill: var(--background-secondary);
-}
 
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-new-tab .clickable-icon,
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-tab-list .clickable-icon,
-body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button,
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
+body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -1380,15 +1380,13 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickab
 }
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-new-tab .clickable-icon:hover,
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-tab-list .clickable-icon:hover,
-body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover,
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover {
+body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover {
   background: var(--rb-gradient-h) border-box;
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--rb-pink) 45%, transparent));
 }
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-new-tab .clickable-icon:hover .svg-icon,
 body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tab-header-tab-list .clickable-icon:hover .svg-icon,
-body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover .svg-icon,
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover .svg-icon {
+body:is(.rb-tabs-compact, .rb-tabs-dots) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover .svg-icon {
   stroke: var(--rb-ink) !important;
   filter: none !important;
 }
@@ -1481,17 +1479,20 @@ input[type="range"]::-webkit-slider-thumb {
 .menu-separator { border-top: 1px solid var(--background-modifier-border); }
 
 /* ═══ vault corner, powerline: a status line ═══
-   ~/vault ⇅                                        ?  ⚙
-   one flat bar like the tab bar above it. the segments run through the rainbow left to right:
-   pink → peach (vault), yellow → green (open the vault menu), then blue (help) and lilac (settings)
-   pointing back the other way. no blur and no filters: a filter inside a blurred card was what turned
-   things black when you pointed at them. */
+   ~/vault ▸ ⇅ ▸  ·······························  ◂ ? ◂ ⚙
+   one flat bar like the tab bar above it, laid out on a grid: the vault group sits in the left column, help and
+   settings in the right one, whatever order obsidian writes them in the page. the segments run through the
+   rainbow: pink → peach (vault), yellow → green (open the vault menu), blue (help), lilac (settings), the last
+   two pointing back at the vault. no blur and no filters anywhere in here: a filter inside a blurred card is
+   what used to turn things black when you pointed at them. hover just lightens the segment. */
 
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   box-sizing: border-box;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(10px, 1fr) max-content;
+  grid-template-rows: auto;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: stretch;
   gap: 0;
   width: 100%;
   min-height: 38px;
@@ -1507,16 +1508,21 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
 }
 
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
-  order: 1;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
-  flex: 0 0 auto;
+  flex-direction: row;
   min-width: 0;
-  max-width: 72%;
+  max-width: 100%;
+  width: auto;
   height: 24px;
+  margin: 0;
   padding: 0;
   gap: 0;
   background: transparent;
+  border: 0;
   border-radius: 0;
   box-shadow: none;
   filter: none;
@@ -1531,8 +1537,10 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   min-width: 0;
   max-width: 24ch;
   height: 24px;
+  margin: 0;
   padding: 0 16px 0 12px;
   font-size: 11.5px;
+  font-weight: 700;
   line-height: 24px;
   white-space: nowrap;
   overflow: hidden;
@@ -1542,8 +1550,10 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   border-radius: 12px 0 0 12px;
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.6; }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name { background: linear-gradient(90deg, var(--rb-pink), var(--rb-c1)); }
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.6; font-weight: 400; }
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
+  background: linear-gradient(90deg, color-mix(in srgb, #fff 22%, var(--rb-c0)), color-mix(in srgb, #fff 22%, var(--rb-c1)));
+}
 
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   order: 2;
@@ -1551,6 +1561,7 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  box-sizing: border-box;
   width: 30px;
   height: 24px;
   margin: 0 0 0 -8px;
@@ -1560,7 +1571,9 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   border-radius: 0;
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%, 9px 50%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon { background: linear-gradient(90deg, var(--rb-yellow), var(--rb-green)); }
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon {
+  background: linear-gradient(90deg, color-mix(in srgb, #fff 22%, var(--rb-c2)), color-mix(in srgb, #fff 22%, var(--rb-c3)));
+}
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-icon {
   width: 13px;
   height: 13px;
@@ -1568,8 +1581,19 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-ic
   filter: none !important;
 }
 
-/* help and settings: segments on the right, arrows pointing back at the vault */
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-actions { display: contents; }
+/* help and settings: a group on the right, arrows pointing back at the vault */
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon {
   box-sizing: border-box;
   display: flex;
@@ -1586,19 +1610,21 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   box-shadow: none;
   filter: none;
   color: var(--rb-ink);
+  background-color: var(--rb-c4);
+  background-image: none;
   clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
   transition: none;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(1) { order: 3; margin-left: auto; background: var(--rb-c4); }
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2) {
-  order: 4;
   margin-left: -9px;
   padding-right: 14px;
-  background: var(--rb-c5);
+  background-color: var(--rb-c5);
   border-radius: 0 12px 12px 0;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(1):hover { background: color-mix(in srgb, #fff 22%, var(--rb-c4)); filter: none; }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2):hover { background: color-mix(in srgb, #fff 22%, var(--rb-c5)); filter: none; }
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:hover {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22));
+  filter: none;
+}
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon .svg-icon {
   width: 14px;
   height: 14px;
@@ -1919,22 +1945,25 @@ body.rb-tabs-vim .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-head
 body.rb-tabs-vim .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-title { color: var(--text-normal); font-weight: 700; }
 body.rb-tabs-vim .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button { color: var(--text-muted); }
 
-/* ═══ vault corner: a tmux status bar ═══
-   [❯ ~/vault ▾]                                   help  settings
-   the vault is a solid block (the same one the open tab uses), the rest are plain words.
-   the words are written here, not read from tooltips, so they always show. */
+/* ═══ vault corner, text: a prompt line ═══
+   ❯ ~/vault ▾                                         help  settings
+   no blocks, no pills: the vault is a shell prompt (pink ❯, peach name, faint ▾) and help / settings are plain
+   words, the same way the plugins' own footers read. point at the vault and the name is underlined. the words
+   are written here, not read from tooltips, so they always show. laid out on a grid: vault left, words right. */
 
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   box-sizing: border-box;
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(12px, 1fr) max-content;
+  grid-template-rows: auto;
   align-items: center;
-  gap: 14px;
+  justify-content: stretch;
+  gap: 0;
   width: 100%;
-  min-height: 38px;
+  min-height: 34px;
   margin: 0;
-  padding: 7px 10px;
-  background: color-mix(in srgb, var(--text-normal) 4%, var(--background-secondary));
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--text-normal) 3%, var(--background-secondary));
   border: 0;
   border-top: 1px solid var(--rb-line);
   border-radius: 0;
@@ -1946,53 +1975,67 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile 
 }
 
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher {
-  order: 1;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
-  flex: 0 1 auto;
-  min-width: 0;
   gap: 7px;
-  height: 24px;
-  padding: 0 10px;
-  background: var(--rb-c0);
-  border-radius: var(--rb-r-m);
+  min-width: 0;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
   flex-grow: 0 !important;
   width: auto !important;
-  max-width: 72% !important;
+  max-width: 100% !important;
   filter: none !important;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover { background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16)); }
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover { background: none; }
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher::before {
   content: "❯";
   order: 0;
-  color: var(--rb-ink);
-  opacity: 0.6;
+  flex: 0 0 auto;
+  color: var(--rb-t0);
   font-family: var(--rb-prompt-font);
 }
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name,
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
   order: 1;
   display: block;
+  flex: 0 1 auto;
   min-width: 0;
-  max-width: 22ch;
+  max-width: 24ch;
+  margin: 0;
   padding: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 11.5px;
   font-weight: 700;
-  line-height: 24px;
-  color: var(--rb-ink);
+  line-height: 22px;
+  color: var(--rb-t1);
   background: none;
   clip-path: none;
   border-radius: 0;
-  text-decoration: none;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.6; }
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name::before { content: "~/"; color: var(--text-faint); font-weight: 400; }
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
+  text-decoration: underline;
+  text-decoration-color: var(--rb-pink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   order: 2;
   display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
   width: auto;
   height: auto;
   margin: 0;
@@ -2001,20 +2044,27 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-i
   clip-path: none;
 }
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon .svg-icon { display: none; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon::after { content: "▾"; font-size: 10px; color: var(--rb-ink); opacity: 0.6; }
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon::after { content: "▾"; font-size: 10px; color: var(--text-faint); }
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon::after { color: var(--rb-t0); }
 
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions {
-  order: 3;
+body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 14px;
-  margin-left: auto;
+  margin: 0;
+  padding: 0;
+  background: none;
 }
 body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
   display: inline-flex;
   align-items: center;
   width: auto;
   height: auto;
+  min-width: 0;
   padding: 2px 0;
   margin: 0;
   background: none;
@@ -2035,7 +2085,7 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .c
   color: var(--rb-t0);
   text-decoration: underline;
   text-decoration-color: var(--rb-pink);
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
 }
 
 /* the vault tooltip shows a long path: let it wrap on any character instead of splitting a word in two */
@@ -2266,8 +2316,10 @@ body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-hea
   min-width: 0;
   height: 24px;
   margin: 0;
-  padding: 0 9px;
-  border-radius: var(--rb-r-m);
+  padding: 0 8px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
 }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header .workspace-tab-header-inner { display: none; }
 /* obsidian draws the open tab's curved corner with ::before and ::after. the word lives in ::after, so every
@@ -2309,21 +2361,32 @@ body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-hea
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="file-properties"]::after { content: "props" !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="outline"]::after { content: "outline" !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="tv-fetch-view"]::after { content: "fastfetch" !important; }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type*="music" i]::after { content: "music" !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="graph"]::after { content: "graph" !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="localgraph"]::after { content: "graph" !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[aria-label]:not([aria-label=""])::after { content: attr(aria-label) !important; }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:hover::after { color: var(--text-normal); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active {
-  background: var(--stab, var(--rb-c0));
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:is(:hover, .is-active, .is-active:hover) {
+  background: none;
+  background-image: none;
   box-shadow: none;
 }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active::after { color: var(--rb-ink); font-weight: 700; }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+1) { --stab: var(--rb-c0); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+2) { --stab: var(--rb-c1); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+3) { --stab: var(--rb-c2); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+4) { --stab: var(--rb-c3); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+5) { --stab: var(--rb-c4); }
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+6) { --stab: var(--rb-c5); }
+/* the open tab: its word in its own rainbow colour, underlined (same as "terminal" in the plugins' footers) */
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active::after {
+  color: var(--stxt, var(--rb-t0));
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--stxt, var(--rb-t0));
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 5px;
+}
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+1) { --stab: var(--rb-c0); --stxt: var(--rb-t0); }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+2) { --stab: var(--rb-c1); --stxt: var(--rb-t1); }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+3) { --stab: var(--rb-c2); --stxt: var(--rb-t2); }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+4) { --stab: var(--rb-c3); --stxt: var(--rb-t3); }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+5) { --stab: var(--rb-c4); --stxt: var(--rb-t4); }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:nth-child(6n+6) { --stab: var(--rb-c5); --stxt: var(--rb-t5); }
 
 /* menus and settings lose their leading icons, tree arrows become + and - */
 body:not(.rb-ui-glyph) .menu-item > .menu-item-icon:first-child:not(.mod-submenu) { display: none; }
@@ -2608,20 +2671,18 @@ body:not(.rb-ui-glyph) .workspace-leaf-content:is([data-type="backlink"], [data-
    17 · the selected line
    the rainbow under an open tab was drawn in pastels on a pastel block, so it vanished. it now
    sits in a small dark capsule (the same ink the text on the block uses), which the rainbow
-   can be seen against. tmux and powerline tabs, and both sidebar tab styles.
+   can be seen against. tmux and powerline page tabs only: the sidebar tabs (text or powerline) have no
+   rainbow line, the open one is just a solid segment (powerline) or an underlined word (text).
    ═══════════════════════════════════════════════════════════════════════ */
 
 body { --rb-sel-line: var(--rb-gradient-h), linear-gradient(var(--rb-ink), var(--rb-ink)); }
-body:is(.rb-tabs-term, .rb-tabs-powerline, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active,
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active,
-body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active {
+body:is(.rb-tabs-term, .rb-tabs-powerline, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
   background-image: var(--rb-sel-line);
   background-size: calc(100% - 20px) 2px, calc(100% - 16px) 4px;
   background-position: 10px calc(100% - 1px), 8px 100%;
   background-repeat: no-repeat;
 }
-body:is(.rb-tabs-powerline) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active,
-body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header.is-active {
+body:is(.rb-tabs-powerline) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
   background-size: calc(100% - 34px) 2px, calc(100% - 30px) 4px;
   background-position: 17px calc(100% - 1px), 15px 100%;
 }
