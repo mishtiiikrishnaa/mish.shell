@@ -1198,13 +1198,7 @@ body {
   box-shadow: 0 1px 3px rgba(60, 30, 50, 0.16), 0 0 0 1px var(--background-modifier-border);
 }
 
-/* the rainbow line along the bottom of the active tab */
-.workspace-tabs:where(:not(.mod-stacked)) .workspace-tab-header.is-active .workspace-tab-header-inner {
-  background-image: var(--rb-gradient-h);
-  background-size: calc(100% - 20px) 2px;
-  background-position: 10px calc(100% - 1px);
-  background-repeat: no-repeat;
-}
+/* (no rainbow line along the bottom of the open tab any more: the open tab is told apart by its colour or its underline) */
 
 /* centred titles, close button on the left (page tabs only; the sidebar tabs stay icon-only) */
 .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-inner {
@@ -1479,12 +1473,11 @@ input[type="range"]::-webkit-slider-thumb {
 .menu-separator { border-top: 1px solid var(--background-modifier-border); }
 
 /* ═══ vault corner, powerline: a status line ═══
-   ~/vault ▸ ⇅ ▸  ·······························  ◂ ? ◂ ⚙
-   one flat bar like the tab bar above it, laid out on a grid: the vault group sits in the left column, help and
-   settings in the right one, whatever order obsidian writes them in the page. the segments run through the
-   rainbow: pink → peach (vault), yellow → green (open the vault menu), blue (help), lilac (settings), the last
-   two pointing back at the vault. no blur and no filters anywhere in here: a filter inside a blurred card is
-   what used to turn things black when you pointed at them. hover just lightens the segment. */
+   [⇅ ~/vault ▸] ·································· [◂ ? ◂ ⚙]
+   one peach-pink arrow for the vault, the vault menu's chevrons tucked inside it, and help / settings as the same
+   quiet grey segments the inactive sidebar tabs use (they light up blue and lilac when you point at them).
+   laid out on a grid, vault left and the other two right, whatever order obsidian writes them in the page.
+   no blur and no filters: a filter inside a blurred card is what used to turn things black on hover. */
 
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   box-sizing: border-box;
@@ -1507,81 +1500,81 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   backdrop-filter: none;
 }
 
+/* the vault: one segment. the switcher itself is the arrow, the name and the chevrons sit inside it */
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
   grid-column: 1;
   grid-row: 1;
   justify-self: start;
   display: inline-flex;
-  align-items: center;
   flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
   min-width: 0;
   max-width: 100%;
   width: auto;
-  height: 24px;
+  height: 26px;
   margin: 0;
-  padding: 0;
-  gap: 0;
-  background: transparent;
+  padding: 0 18px 0 12px;
+  gap: 6px;
+  color: var(--rb-ink);
+  background-color: transparent;
+  background-image: linear-gradient(90deg, var(--rb-c0), var(--rb-c1));
   border: 0;
-  border-radius: 0;
+  border-radius: 13px 0 0 13px;
   box-shadow: none;
   filter: none;
   cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover { background: transparent; filter: none; }
-
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), linear-gradient(90deg, var(--rb-c0), var(--rb-c1));
+  filter: none;
+}
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name {
   order: 1;
   display: block;
   flex: 0 1 auto;
   min-width: 0;
   max-width: 24ch;
-  height: 24px;
   margin: 0;
-  padding: 0 16px 0 12px;
+  padding: 0;
   font-size: 11.5px;
   font-weight: 700;
-  line-height: 24px;
+  line-height: 26px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--rb-ink);
-  background: linear-gradient(90deg, var(--rb-c0), var(--rb-c1));
-  border-radius: 12px 0 0 12px;
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+  background: none;
+  border-radius: 0;
+  clip-path: none;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.6; font-weight: 400; }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
-  background: linear-gradient(90deg, color-mix(in srgb, #fff 22%, var(--rb-c0)), color-mix(in srgb, #fff 22%, var(--rb-c1)));
-}
-
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.55; font-weight: 400; }
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   order: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  box-sizing: border-box;
-  width: 30px;
-  height: 24px;
-  margin: 0 0 0 -8px;
-  padding: 0 5px 0 11px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
   color: var(--rb-ink);
-  background: linear-gradient(90deg, var(--rb-c2), var(--rb-c3));
+  background: none;
   border-radius: 0;
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%, 9px 50%);
+  clip-path: none;
+  opacity: 0.6;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon {
-  background: linear-gradient(90deg, color-mix(in srgb, #fff 22%, var(--rb-c2)), color-mix(in srgb, #fff 22%, var(--rb-c3)));
-}
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon { opacity: 1; }
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-icon {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   stroke: var(--rb-ink) !important;
   filter: none !important;
 }
 
-/* help and settings: a group on the right, arrows pointing back at the vault */
+/* help and settings: two quiet segments on the right, arrows pointing back at the vault */
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
   grid-column: 3;
   grid-row: 1;
@@ -1601,16 +1594,16 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   justify-content: center;
   flex: 0 0 auto;
   width: auto;
-  min-width: 40px;
-  height: 24px;
+  min-width: 38px;
+  height: 26px;
   margin: 0;
   padding: 0 12px 0 18px;
   border: 0;
   border-radius: 0;
   box-shadow: none;
   filter: none;
-  color: var(--rb-ink);
-  background-color: var(--rb-c4);
+  color: var(--text-muted);
+  background-color: color-mix(in srgb, var(--text-normal) 9%, transparent);
   background-image: none;
   clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
   transition: none;
@@ -1618,17 +1611,14 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2) {
   margin-left: -9px;
   padding-right: 14px;
-  background-color: var(--rb-c5);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 13px 13px 0;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:hover {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22));
-  filter: none;
-}
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(1):hover { background-color: var(--rb-c4); color: var(--rb-ink); filter: none; }
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2):hover { background-color: var(--rb-c5); color: var(--rb-ink); filter: none; }
 body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon .svg-icon {
   width: 14px;
   height: 14px;
-  stroke: var(--rb-ink) !important;
+  stroke: currentColor !important;
   filter: none !important;
 }
 
@@ -2306,7 +2296,12 @@ body:not(.rb-ui-glyph) .workspace-tab-header-inner-close-button::after {
 
 /* sidebar tabs: the tab is its name, the open one is a solid block.
    the word is the view's type (always present), swapped for obsidian's own tooltip text when it has one. */
-body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header-container-inner { gap: 2px; }
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header-container-inner {
+  gap: 2px;
+  align-items: center;
+  height: auto;
+  min-height: 30px;
+}
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header {
   flex: 0 0 auto;
   display: flex;
@@ -2320,6 +2315,11 @@ body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-hea
   border-radius: 0;
   background: none;
   box-shadow: none;
+  overflow: visible;
+  clip-path: none;
+  -webkit-mask: none;
+  mask: none;
+  contain: none;
 }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header .workspace-tab-header-inner { display: none; }
 /* obsidian draws the open tab's curved corner with ::before and ::after. the word lives in ::after, so every
@@ -2346,9 +2346,16 @@ body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-hea
   overflow: visible !important;
   text-overflow: clip !important;
   white-space: nowrap !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  clip: auto !important;
+  clip-path: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  box-sizing: content-box !important;
   font-family: var(--font-interface);
   font-size: var(--font-ui-smaller);
-  line-height: 1;
+  line-height: 1.4;
   color: var(--text-faint);
 }
 body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header[data-type="file-explorer"]::after { content: "files" !important; }
@@ -2669,23 +2676,9 @@ body:not(.rb-ui-glyph) .workspace-leaf-content:is([data-type="backlink"], [data-
 
 /* ═══════════════════════════════════════════════════════════════════════
    17 · the selected line
-   the rainbow under an open tab was drawn in pastels on a pastel block, so it vanished. it now
-   sits in a small dark capsule (the same ink the text on the block uses), which the rainbow
-   can be seen against. tmux and powerline page tabs only: the sidebar tabs (text or powerline) have no
-   rainbow line, the open one is just a solid segment (powerline) or an underlined word (text).
+   there isn't one. the open tab is a solid segment (tmux, powerline, sidebar powerline) or an underlined
+   word (sidebar text). the rainbow underline and the dark capsule that used to hold it are gone.
    ═══════════════════════════════════════════════════════════════════════ */
-
-body { --rb-sel-line: var(--rb-gradient-h), linear-gradient(var(--rb-ink), var(--rb-ink)); }
-body:is(.rb-tabs-term, .rb-tabs-powerline, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
-  background-image: var(--rb-sel-line);
-  background-size: calc(100% - 20px) 2px, calc(100% - 16px) 4px;
-  background-position: 10px calc(100% - 1px), 8px 100%;
-  background-repeat: no-repeat;
-}
-body:is(.rb-tabs-powerline) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
-  background-size: calc(100% - 34px) 2px, calc(100% - 30px) 4px;
-  background-position: 17px calc(100% - 1px), 15px 100%;
-}
 
 /* ═══════════════════════════════════════════════════════════════════════
    18 · settings: selections follow the icon setting
