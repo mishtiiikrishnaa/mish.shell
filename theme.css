@@ -1,5 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   mish.shell 1.4 · an obsidian theme (terminal edition)
+   mish.shell 1.5 · an obsidian theme (terminal edition)
+   1.5.0: no zoom on hover (tooltips and chrome buttons), pressed buttons never go black, help / settings in the
+   powerline vault line no longer overlap (every segment seam is 2px now), sidebar tabs and the + / list segments
+   share one width and icon size, in terminal mode the selected tab / settings page is underlined instead of a
+   block, and the rainbow scrollbar works everywhere. all of it is section 21 at the bottom.
+
    1.4.3: vault corner rebuilt in both styles (text = a prompt line, powerline = one status line, laid out on a
    grid so nothing depends on flex order), sidebar tabs lose the rainbow capsule, and in text mode the open
    sidebar tab is just its name, underlined, like the plugins' own footer.
@@ -2764,3 +2769,283 @@ body.rb-ui-glyph .vertical-tab-nav-item:not(.is-active):hover .svg-icon { stroke
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   21 · 1.5.0 fixes
+   this section comes last so it wins over everything above.
+   a  no zoom: tooltips and chrome buttons never scale on hover
+   b  pressed: every pressed button gets an explicit look, never black (both icon modes)
+   c  powerline: help and settings no longer overlap, every segment pair has the same 2px seam
+   d  uniform segments across the top: same width, height and icon size
+   e  terminal (text) mode: the selected thing is underlined, not a solid block
+   f  rainbow scrollbar, forced on everywhere
+   ═══════════════════════════════════════════════════════════════════════ */
+
+body {
+  --rb-press: rgba(255, 255, 255, 0.2);
+  --rb-seg-h: 24px;
+  --rb-seg-w: 42px;
+  --rb-seg-icon: 16px;
+}
+body.theme-light { --rb-press: rgba(255, 255, 255, 0.45); }
+
+/* ── a · no zoom ──
+   obsidian's tooltip pops in with a scale animation, and some chrome buttons scale when pointed at.
+   both are switched off. (the close button on a page tab is left alone, it uses a transform to centre itself.) */
+.tooltip { animation: none !important; }
+:is(.mod-left-split, .mod-right-split, .mod-root .workspace-tabs:not(.mod-stacked), .workspace-ribbon, .workspace-sidedock-vault-profile, .view-header)
+  :is(.clickable-icon, .side-dock-ribbon-action, .nav-action-button, .view-action, .workspace-tab-header, .workspace-tab-header-inner,
+      .workspace-tab-header-inner-icon, .workspace-tab-header-new-tab, .workspace-tab-header-tab-list, .workspace-drawer-vault-switcher,
+      .workspace-drawer-vault-name, .workspace-drawer-vault-switcher-icon, .svg-icon):not(.workspace-tab-header-inner-close-button),
+.workspace-ribbon .side-dock-ribbon-action,
+.workspace-ribbon .side-dock-ribbon-action .svg-icon {
+  transform: none !important;
+  scale: none !important;
+}
+
+/* ── c · one seam size everywhere: 2px ── */
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon { margin: 0 0 0 -8px; }
+
+/* help | settings: help gets a notch on its right edge that matches the tip of settings,
+   so the two never overlap (the old overlap stacked two translucent triangles into a dark wedge) */
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon {
+  margin: 0;
+  padding: 0 17px 0 18px;
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 50%, 100% 100%, 9px 100%, 0 50%);
+}
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2) {
+  margin-left: -7px;
+  padding: 0 14px 0 18px;
+  border-radius: 0 13px 13px 0;
+  clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
+}
+/* a lone button (only help, or only settings) keeps a plain notch-free right edge */
+body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:only-child {
+  padding: 0 14px 0 18px;
+  border-radius: 0 13px 13px 0;
+  clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
+}
+
+/* ── d · uniform segments across the top ── */
+
+/* sidebar tabs */
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--rb-seg-w);
+  min-width: var(--rb-seg-w);
+  max-width: var(--rb-seg-w);
+  height: var(--rb-seg-h);
+  margin: 0 0 0 -7px;
+  padding: 0;
+}
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header:first-child { margin-left: 0; }
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header .workspace-tab-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+}
+/* the first segment has a flat left edge, so nudge its icon to the middle of what you can see */
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header:first-child .workspace-tab-header-inner { padding-right: 4px !important; }
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header .workspace-tab-header-inner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--rb-seg-icon);
+  width: var(--rb-seg-icon);
+  height: var(--rb-seg-icon);
+  margin: 0;
+}
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header .workspace-tab-header-inner-icon :is(svg, .svg-icon) {
+  width: var(--rb-seg-icon);
+  height: var(--rb-seg-icon);
+  stroke-width: 2px;
+}
+
+/* + and the tab list, same box as the sidebar tabs */
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-new-tab .clickable-icon,
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-tab-list .clickable-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--rb-seg-w);
+  min-width: var(--rb-seg-w);
+  height: var(--rb-seg-h);
+  padding: 0;
+}
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-new-tab .clickable-icon { padding-right: 4px; }
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-tab-list { margin-left: -7px; }
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-tab-list .clickable-icon { padding-left: 4px; }
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-new-tab .svg-icon,
+body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tab-header-tab-list .svg-icon {
+  width: var(--rb-seg-icon);
+  height: var(--rb-seg-icon);
+  stroke-width: 2px;
+}
+/* the powerline tab bar uses the same seam */
+body.rb-tabs-powerline .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header { margin-left: -7px; }
+
+/* ── e · terminal (text) mode: selected = underlined ── */
+
+/* tmux bar: the open window is its coloured name, underlined. no block, no ink-coloured text. */
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):hover { background: none; }
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active { background: none; box-shadow: none; }
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-title,
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):active .workspace-tab-header-inner-title {
+  color: var(--tdt, var(--rb-t0));
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 var(--tdt, var(--rb-t0));
+}
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):hover .workspace-tab-header-inner-title {
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--tdt, var(--rb-t0)) 55%, transparent);
+}
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-title::before {
+  color: var(--tdt, var(--rb-t0));
+  opacity: 1;
+}
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button { color: var(--text-muted); }
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button .svg-icon { stroke: currentColor !important; }
+
+/* settings list: the open page is its coloured name, underlined (same as the sidebar tabs) */
+.vertical-tab-nav-item:nth-child(6n+1) { --stab-text: var(--rb-t0); }
+.vertical-tab-nav-item:nth-child(6n+2) { --stab-text: var(--rb-t1); }
+.vertical-tab-nav-item:nth-child(6n+3) { --stab-text: var(--rb-t2); }
+.vertical-tab-nav-item:nth-child(6n+4) { --stab-text: var(--rb-t3); }
+.vertical-tab-nav-item:nth-child(6n+5) { --stab-text: var(--rb-t4); }
+.vertical-tab-nav-item:nth-child(6n+6) { --stab-text: var(--rb-t5); }
+body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active,
+body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active:hover,
+body:not(.rb-ui-glyph) .vertical-tab-nav-item:not(.is-active):active {
+  background: none !important;
+  box-shadow: none !important;
+  color: var(--stab-text, var(--rb-t0)) !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--stab-text, var(--rb-t0));
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 5px;
+}
+body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active::before { content: none; }
+
+/* ── b · pressed: never black ──
+   i could not press things inside obsidian while writing this, so every pressed state is given an explicit
+   colour here, with !important, and icons in a pressed button drop the gradient stroke and any filter
+   (those are what rendered black). */
+
+/* terminal (text) mode */
+body:not(.rb-ui-glyph) :is(.clickable-icon, .nav-action-button, .view-action, .side-dock-ribbon-action, .workspace-drawer-vault-switcher, .workspace-drawer-vault-actions .clickable-icon):active {
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: var(--rb-t0) !important;
+  text-decoration: underline;
+  text-decoration-color: var(--rb-pink);
+  text-underline-offset: 4px;
+}
+body:not(.rb-ui-glyph) :is(.clickable-icon, .nav-action-button, .view-action, .side-dock-ribbon-action, .workspace-tab-header):active :is(.svg-icon, svg) {
+  stroke: currentColor !important;
+  filter: none !important;
+}
+/* sidebar tabs in text mode: the word lights up and is underlined while pressed */
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:is(:active, .is-active:active) {
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body:not(.rb-ui-glyph) :is(.mod-left-split, .mod-right-split) .workspace-tab-header:active::after {
+  color: var(--stxt, var(--rb-t0)) !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--stxt, var(--rb-t0));
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 5px;
+}
+
+/* powerline mode: a pressed segment keeps its own colour and lightens */
+body.rb-ui-glyph :is(
+  :is(.mod-left-split, .mod-right-split) .workspace-tab-header,
+  .workspace-tab-header-new-tab .clickable-icon,
+  .workspace-tab-header-tab-list .clickable-icon,
+  .workspace-drawer-vault-switcher:active .workspace-drawer-vault-switcher-icon,
+  .workspace-drawer-vault-actions .clickable-icon
+):active,
+body.rb-ui-glyph .workspace-drawer-vault-switcher:active .workspace-drawer-vault-switcher-icon {
+  background-image: linear-gradient(var(--rb-press), var(--rb-press)) !important;
+  filter: none !important;
+}
+body.rb-ui-glyph .workspace-drawer-vault-switcher:active .workspace-drawer-vault-name {
+  background-image: linear-gradient(var(--rb-press), var(--rb-press)), linear-gradient(90deg, var(--rb-c0), var(--rb-c1)) !important;
+}
+body.rb-ui-glyph :is(.mod-left-split, .mod-right-split) .workspace-tab-header:not(.is-active):active { color: var(--stxt, var(--rb-t0)) !important; }
+body.rb-ui-glyph .workspace-drawer-vault-switcher:active .workspace-drawer-vault-switcher-icon { color: var(--rb-t2) !important; }
+body.rb-ui-glyph .workspace-drawer-vault-actions .clickable-icon:nth-child(1):active { color: var(--rb-t4) !important; }
+body.rb-ui-glyph .workspace-drawer-vault-actions .clickable-icon:nth-child(2):active { color: var(--rb-t5) !important; }
+body.rb-ui-glyph :is(.clickable-icon, .workspace-tab-header):active :is(.svg-icon, svg) { filter: none !important; }
+
+/* page tabs, both modes: pressing a tab that is not open lightens it (text-mode tmux uses the underline above) */
+.mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):active {
+  background-image: linear-gradient(var(--rb-press), var(--rb-press)) !important;
+}
+body:not(.rb-ui-glyph):is(.rb-tabs-term, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active):active {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* settings list in powerline mode: the open and the pressed row are always the pastel arrow with ink text */
+body.rb-ui-glyph .vertical-tab-nav-item.is-active,
+body.rb-ui-glyph .vertical-tab-nav-item.is-active:hover,
+body.rb-ui-glyph .vertical-tab-nav-item.is-active:active {
+  background: var(--stab, var(--rb-c0)) !important;
+  color: var(--rb-ink) !important;
+  opacity: 1 !important;
+}
+body.rb-ui-glyph .vertical-tab-nav-item:not(.is-active):active {
+  background: color-mix(in srgb, var(--stab, var(--rb-c0)) 30%, transparent) !important;
+  color: var(--stab-text, var(--rb-t0)) !important;
+  padding-right: 18px;
+  border-radius: 12px 0 0 12px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+body.rb-ui-glyph .vertical-tab-nav-item:not(.is-active):active .svg-icon { stroke: currentColor !important; filter: none !important; }
+
+/* ── f · rainbow scrollbar ──
+   newer obsidian / electron builds style scrollbars with the standard scrollbar-color and scrollbar-width
+   properties, and once either is set the ::-webkit-scrollbar rules below are ignored. that is why the
+   thumb looked flat grey in the settings list and the sidebars. they are forced back to auto everywhere. */
+*, *::before, *::after {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; background: transparent; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active,
+::-webkit-scrollbar-thumb:window-inactive {
+  background-color: transparent !important;
+  background-image: var(--rb-gradient-v) !important;
+  background-size: 100% 100% !important;
+  background-clip: padding-box !important;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  min-height: 44px;
+}
+::-webkit-scrollbar-thumb:horizontal,
+::-webkit-scrollbar-thumb:horizontal:hover,
+::-webkit-scrollbar-thumb:horizontal:active {
+  background-image: var(--rb-gradient-h) !important;
+  min-height: 0;
+  min-width: 44px;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active { border-width: 2px; }
