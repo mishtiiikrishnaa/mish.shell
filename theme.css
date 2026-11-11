@@ -1,9 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════
    mish.shell 1.4 · an obsidian theme (terminal edition)
-   1.5.1: no pink focus ring anywhere, the note header bar is centred (powerline: a "~" segment then the path,
-   text: a ❯ and flat blocks), the open tab's close mark is a thin ×, notes get a terminal feel (block caret,
-   cursor line, # marks, dash bullets, code window, yaml fences) and the search pane is a prompt + grep output.
-   almost all of it is section 23 at the bottom. the focus ring is also switched off in place (see --background-modifier-border-focus and the :focus-visible rule in section 20).
+   1.4.4: tested against obsidian 1.15 own stylesheet: vault name no longer changes size on hover (obsidian vault rules
+   out-ranked ours), settings underline in text mode (obsidian clips the title), one thin rainbow scrollbar in every
+   container including native-scrollbar mode.
 
    1.4.3: vault corner rebuilt in both styles (text = a prompt line, powerline = one status line, laid out on a
    grid so nothing depends on flex order), sidebar tabs lose the rainbow capsule, and in text mode the open
@@ -677,7 +676,7 @@ body {
   --background-secondary-alt: #0b0b0e;
   --background-modifier-border:        #2a2a2f;
   --background-modifier-border-hover:  #3a3a42;
-  --background-modifier-border-focus:  transparent;     /* no focus ring */
+  --background-modifier-border-focus:  var(--rb-pink);
   --background-modifier-hover:         rgba(232, 232, 237, 0.06);
   --background-modifier-active-hover:  rgba(255, 166, 201, 0.14);
   --background-modifier-form-field:    #18181d;
@@ -715,7 +714,7 @@ body {
   --background-secondary-alt: #ece4ea;
   --background-modifier-border:        #e4dbe1;
   --background-modifier-border-hover:  #d3c7cf;
-  --background-modifier-border-focus:  transparent;     /* no focus ring */
+  --background-modifier-border-focus:  var(--rb-pink);
   --background-modifier-hover:         rgba(60, 30, 50, 0.06);
   --background-modifier-active-hover:  rgba(214, 51, 108, 0.12);
   --background-modifier-form-field:    #ffffff;
@@ -1478,7 +1477,7 @@ input[type="range"]::-webkit-slider-thumb {
    the + and list buttons. only the vault name has colour. laid out on a grid (vault group left, help +
    settings right). the sizes obsidian is known to fight over are !important. no filters. */
 
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   box-sizing: border-box;
   display: grid !important;
   grid-template-columns: minmax(0, max-content) minmax(10px, 1fr) max-content;
@@ -1499,7 +1498,7 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   backdrop-filter: none;
 }
 
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
   grid-column: 1;
   grid-row: 1;
   justify-self: start;
@@ -1522,10 +1521,10 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher {
   filter: none !important;
   cursor: pointer;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover,
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:active { background: transparent !important; }
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover,
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:active { background: transparent !important; }
 
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name {
   order: 1;
   display: block;
   flex: 0 1 auto !important;
@@ -1548,12 +1547,12 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   border-radius: 12px 0 0 12px;
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.55; font-weight: 400; }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:is(:hover, :active) .workspace-drawer-vault-name {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-name::before { content: "~/"; opacity: 0.55; font-weight: 400; }
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:is(:hover, :active) .workspace-drawer-vault-name {
   background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), linear-gradient(90deg, var(--rb-c0), var(--rb-c1));
 }
 
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   order: 2;
   display: flex;
   align-items: center;
@@ -1572,11 +1571,11 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   opacity: 1;
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%, 9px 50%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:is(:hover, :active) .workspace-drawer-vault-switcher-icon {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher:is(:hover, :active) .workspace-drawer-vault-switcher-icon {
   color: var(--rb-t2);
   background-color: var(--rb-seg-hover);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-icon {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-icon {
   width: var(--rb-seg-icon, 15px);
   height: var(--rb-seg-icon, 15px);
   stroke: currentColor !important;
@@ -1584,7 +1583,7 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-drawer-vault-switcher .svg-ic
 }
 
 /* help + settings: the same two-piece capsule as + and the list button (arrow, then a rounded end) */
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
   grid-column: 3;
   grid-row: 1;
   justify-self: end;
@@ -1597,7 +1596,7 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   padding: 0;
   background: none;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon {
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -1618,16 +1617,16 @@ body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .works
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
   transition: none;
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2) {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2) {
   margin-left: -8px;
   padding: 0 13px 0 18px;
   border-radius: 0 12px 12px 0;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 9px 50%);
 }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:is(:hover, :active) { background-color: var(--rb-seg-hover); }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(1):is(:hover, :active) { color: var(--rb-t4); }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2):is(:hover, :active) { color: var(--rb-t5); }
-body.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon .svg-icon {
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:is(:hover, :active) { background-color: var(--rb-seg-hover); }
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(1):is(:hover, :active) { color: var(--rb-t4); }
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon:nth-child(2):is(:hover, :active) { color: var(--rb-t5); }
+html body.rb-ui-glyph.rb-ui-glyph.rb-ui-glyph:not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions .clickable-icon .svg-icon {
   width: var(--rb-seg-icon, 15px);
   height: var(--rb-seg-icon, 15px);
   stroke: currentColor !important;
@@ -1953,7 +1952,7 @@ body.rb-tabs-vim .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-head
    words, the same way the plugins' own footers read. point at the vault and the name is underlined. the words
    are written here, not read from tooltips, so they always show. laid out on a grid: vault left, words right. */
 
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile {
   box-sizing: border-box;
   display: grid !important;
   grid-template-columns: minmax(0, max-content) minmax(12px, 1fr) max-content;
@@ -1976,7 +1975,7 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile 
   line-height: 1.4;
 }
 
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher {
   grid-column: 1;
   grid-row: 1;
   justify-self: start;
@@ -1998,16 +1997,16 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher {
   max-width: 100% !important;
   filter: none !important;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover { background: none; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher::before {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover { background: none; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher::before {
   content: "❯";
   order: 0;
   flex: 0 0 auto;
   color: var(--rb-t0);
   font-family: var(--rb-prompt-font);
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name,
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name,
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
   order: 1;
   display: block;
   flex: 0 1 auto;
@@ -2026,14 +2025,14 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:h
   clip-path: none;
   border-radius: 0;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name::before { content: "~/"; color: var(--text-faint); font-weight: 400; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-name::before { content: "~/"; color: var(--text-faint); font-weight: 400; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-name {
   text-decoration: underline;
   text-decoration-color: var(--rb-pink);
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon {
   order: 2;
   display: inline-flex;
   align-items: center;
@@ -2045,11 +2044,11 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-i
   background: none;
   clip-path: none;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon .svg-icon { display: none; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon::after { content: "▾"; font-size: 10px; color: var(--text-faint); }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon::after { color: var(--rb-t0); }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon .svg-icon { display: none; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher-icon::after { content: "▾"; font-size: 10px; color: var(--text-faint); }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-switcher:hover .workspace-drawer-vault-switcher-icon::after { color: var(--rb-t0); }
 
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile .workspace-drawer-vault-actions {
   grid-column: 3;
   grid-row: 1;
   justify-self: end;
@@ -2061,7 +2060,7 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-sidedock-vault-profile 
   padding: 0;
   background: none;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon {
   display: inline-flex;
   align-items: center;
   width: auto;
@@ -2078,11 +2077,11 @@ body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .c
   font-size: 11.5px;
   cursor: pointer;
 }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon .svg-icon { display: none; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon::after { content: attr(aria-label); }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(1)::after { content: "help"; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(2)::after { content: "settings"; }
-body:not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover {
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon .svg-icon { display: none; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon::after { content: attr(aria-label); }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(1)::after { content: "help"; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:nth-child(2)::after { content: "settings"; }
+html body:not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-ui-glyph):not(.rb-vault-classic) .workspace-drawer-vault-actions .clickable-icon:hover {
   background: none;
   color: var(--rb-t0);
   text-decoration: underline;
@@ -2585,24 +2584,24 @@ body.rb-ui-glyph :is(.backlink-pane > .tree-item-self, .outgoing-link-pane > .tr
 }
 
 /* results, like grep output */
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result { margin: 0 0 6px; }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-title {
+:is(.backlink-pane, .outgoing-link-pane) .search-result { margin: 0 0 6px; }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-title {
   padding: 2px 10px;
   border-radius: 0;
   background: none;
   color: var(--rb-t4);
 }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-title:hover { background: var(--background-modifier-hover); }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-title .tree-item-inner { color: var(--rb-t4); font-weight: 400; }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-title .tree-item-flair { background: none; padding: 0; color: var(--text-faint); font-size: inherit; }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-title .tree-item-flair::before { content: ":"; }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-matches {
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-title:hover { background: var(--background-modifier-hover); }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-title .tree-item-inner { color: var(--rb-t4); font-weight: 400; }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-title .tree-item-flair { background: none; padding: 0; color: var(--text-faint); font-size: inherit; }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-title .tree-item-flair::before { content: ":"; }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-matches {
   margin: 1px 0 0 14px;
   padding: 0;
   border-left: 2px solid transparent;
   border-image: var(--rb-gradient-v) 1;
 }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-match {
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-match {
   padding: 3px 10px 3px 12px;
   border-radius: 0;
   background: none;
@@ -2610,8 +2609,8 @@ body.rb-ui-glyph :is(.backlink-pane > .tree-item-self, .outgoing-link-pane > .tr
   font-size: var(--font-ui-smaller);
   line-height: 1.55;
 }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-match:hover { background: var(--background-modifier-hover); color: var(--text-normal); }
-:is(.backlink-pane, .outgoing-link-pane, .workspace-leaf-content[data-type="search"]) .search-result-file-matched-text {
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-match:hover { background: var(--background-modifier-hover); color: var(--text-normal); }
+:is(.backlink-pane, .outgoing-link-pane) .search-result-file-matched-text {
   padding: 0;
   border-radius: 0;
   background: none;
@@ -2767,7 +2766,8 @@ body.rb-ui-glyph .vertical-tab-nav-item:not(.is-active):hover .svg-icon { stroke
 
 ::selection { background: color-mix(in srgb, var(--rb-pink) 32%, transparent); }
 :is(button, input, select, textarea, .clickable-icon, .vertical-tab-nav-item, .menu-item):focus-visible {
-  outline: none;      /* was a 2px pink ring */
+  outline: 2px solid color-mix(in srgb, var(--rb-pink) 65%, transparent);
+  outline-offset: 1px;
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
@@ -2804,11 +2804,18 @@ body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active:is(:hover, :active, :foc
   background: none !important;
   color: var(--nxt, var(--rb-t0)) !important;
   font-weight: 700;
+}
+/* obsidian's .vertical-tab-nav-item-title is overflow:hidden (that is its ellipsis), which cuts off an underline
+   drawn below the text. so the underline is drawn on the title itself, with room underneath that is given back
+   with a negative margin, so nothing moves. */
+body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active .vertical-tab-nav-item-title {
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: 2px;
   text-decoration-skip-ink: none;
-  text-underline-offset: 5px;
+  text-underline-offset: 3px;
+  padding-bottom: 6px;
+  margin-bottom: -6px;
 }
 body:not(.rb-ui-glyph) .vertical-tab-nav-item.is-active::before { content: none; }
 body:not(.rb-ui-glyph) .vertical-tab-nav-item:not(.is-active):hover { background: none; color: var(--text-normal); }
@@ -2859,279 +2866,39 @@ button:not(.mod-cta):active { background-color: var(--interactive-hover); }
 .tooltip, .popover, .menu { transition: none !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   23 · 1.5.1
-   no focus ring · the header bar (centred) · the tab's close mark · notes as a
-   terminal buffer · the search pane as a prompt + grep output
+   23 · scrollbars: one thin rainbow strip, everywhere
+   obsidian sizes and colours its scrollbars from variables (and sets scrollbar-width / scrollbar-color on
+   nearly everything, and chromium ignores ::-webkit-scrollbar wherever those are set), so the old rules only
+   ever won in the few places they were forced. this sets the variables, switches the standard properties off
+   (obsidian's own "hide the scrollbar" containers keep hiding theirs, they set it per element), and then
+   says it again with rules obsidian cannot out-rank.
+   a 8px strip with a 2px margin each side = a 4px thumb, 6px when you point at it.
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── no focus ring ──
-   the pink ring came from two places: obsidian's own focus shadow (it reads --background-modifier-border-focus,
-   now transparent above) and an outline this theme drew on :focus-visible (now off). text fields keep a quiet
-   grey border while you type, buttons and icons get a faint fill when you tab to them. */
-:focus-visible { outline: none; }
-body :is(input[type="text"], input[type="search"], input[type="number"], input[type="password"], input[type="email"], input[type="url"], textarea, select, .dropdown):is(:focus, :focus-visible) {
-  outline: none;
-  box-shadow: inset 0 0 0 1px var(--background-modifier-border-hover);
+body {
+  --scrollbar-width: 8px;
+  --scrollbar-height: 8px;
+  --scrollbar-border-width: 2px;
+  --scrollbar-radius: 4px;
+  --scrollbar-native-width: auto;
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: transparent;
+  --scrollbar-active-thumb-bg: transparent;
 }
-:is(.clickable-icon, .vertical-tab-nav-item, .nav-action-button):focus-visible { background-color: var(--background-modifier-hover); }
-button:not(.mod-cta):focus-visible { background-color: var(--interactive-hover); }
+*, body.styled-scrollbars, body:not(.styled-scrollbars) { scrollbar-color: auto !important; }
+html body.styled-scrollbars { scrollbar-width: auto; }
 
-/* ── the header bar: back/forward left, actions right, the path in the true middle ──
-   three grid columns, the two outer ones equal, so the path is centred on the bar no matter how wide the
-   buttons on either side are. a long path takes what is left and is cut with an ellipsis. */
-.view-header {
-  display: grid;
-  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
-  grid-template-rows: auto;
-  align-items: center;
-  column-gap: 8px;
-  border-bottom: 1px solid var(--rb-line);
+html body ::-webkit-scrollbar { width: 8px !important; height: 8px !important; background: transparent !important; border-radius: 0; }
+html body ::-webkit-scrollbar-track { background: transparent !important; }
+html body ::-webkit-scrollbar-corner { background: transparent !important; }
+html body ::-webkit-scrollbar-thumb {
+  background-color: transparent !important;
+  background-image: var(--rb-gradient-v) !important;
+  background-clip: padding-box !important;
+  border: 2px solid transparent !important;
+  border-radius: 6px !important;
+  min-height: 40px;
 }
-.view-header > :is(.view-header-left, .view-header-nav-buttons) { grid-column: 1; grid-row: 1; justify-self: start; }
-.view-header > .view-header-title-container {
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 0;
-  max-width: 100%;
-  justify-content: center;
-}
-.view-header > .view-actions { grid-column: 3; grid-row: 1; justify-self: end; }
-.view-header-title-container.mod-fade::after { display: none; }       /* the edge fade only made sense for a left-aligned path */
-.view-header-title-parent { justify-content: center; }
-
-/* ── powerline: the path starts at "~", like a starship prompt ──
-   [~ ▸][projects ▸][website ▸] ... [note ) */
-body.rb-ui-glyph:not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-title-container::before {
-  content: "~";
-  flex: 0 0 auto;
-  box-sizing: border-box;
-  height: 20px;
-  padding: 0 15px 0 11px;
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 20px;
-  color: var(--text-muted);
-  background: color-mix(in srgb, var(--text-normal) 14%, var(--background-primary));
-  border-radius: 10px 0 0 10px;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
-}
-/* the first folder (or the note itself, at the top level) now follows a segment, so it gets the notch too */
-body.rb-ui-glyph:not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-breadcrumb:first-child {
-  margin-left: -7px;
-  padding-left: 17px;
-  border-radius: 0;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%, 8px 50%);
-}
-body.rb-ui-glyph:not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-title-container:not(:has(.view-header-breadcrumb)) .view-header-title {
-  margin-left: -7px;
-  padding-left: 17px;
-  border-radius: 0 10px 10px 0;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 8px 50%);
-}
-
-/* ── text: a shell prompt and flat blocks, the same ones the open tab and the section titles use ──
-   ❯ [projects][website][old][failed][tests] */
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-title-container::before {
-  content: "❯";
-  flex: 0 0 auto;
-  margin-right: 9px;
-  font-family: var(--rb-prompt-font);
-  font-weight: 700;
-  color: var(--rb-t3);
-}
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-breadcrumb,
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-breadcrumb:first-child,
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-breadcrumb ~ .view-header-breadcrumb {
-  margin-left: 0;
-  padding: 0 9px;
-  border-radius: var(--rb-r-m);
-  clip-path: none;
-}
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-breadcrumb ~ .view-header-breadcrumb { margin-left: 2px; }
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-title-container .view-header-title {
-  margin-left: 2px;
-  padding: 0 9px;
-  border-radius: var(--rb-r-m);
-  clip-path: none;
-}
-body:not(.rb-ui-glyph):not(.rb-crumbs-text):not(.rb-crumbs-plain) .view-header-title-container:not(:has(.view-header-breadcrumb)) .view-header-title { margin-left: 0; }
-
-/* ── rainbow text path: a prompt in front of it, both modes ── */
-body.rb-crumbs-text .view-header-title-container::before {
-  content: "❯";
-  flex: 0 0 auto;
-  margin-right: 9px;
-  font-family: var(--rb-prompt-font);
-  font-weight: 700;
-  color: var(--rb-t3);
-}
-
-/* ── the open tab's close mark (powerline icons) ──
-   the chunky 3px svg cross is gone. a thin × sits in a small round hover target. */
-body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button > .svg-icon { display: none; }
-body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button::after {
-  content: "×";
-  font-family: var(--font-interface);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1;
-  transform: translateY(-1px);
-}
-body.rb-ui-glyph:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active .workspace-tab-header-inner-close-button:hover {
-  background: color-mix(in srgb, currentColor 18%, transparent);
-}
-/* the open tab keeps its whole name (up to its max width); the others are the ones that get cut to "3:…" */
-body:is(.rb-tabs-term, .rb-tabs-powerline, .rb-tabs-vim, :not([class*="rb-tabs-"])) .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active { flex: 0 0 auto; }
-
-/* ── notes: a terminal buffer ──
-   the note font is untouched (cmu serif). what changes is everything around the letters:
-   a block caret, a cursor line, "#" marks on headings, "-" bullets, code in a little window,
-   and yaml-style fences round the properties. (line numbers: settings → editor → show line numbers.) */
-
-/* block caret, like the plugins' prompt (see-through, so the letter under it still reads) */
-.cm-editor .cm-cursor,
-.cm-editor .cm-dropCursor {
-  border-left: 0.6em solid color-mix(in srgb, var(--rb-pink-hi) 55%, transparent) !important;
-  margin-left: 0 !important;
-}
-
-/* the line you are on, like vim's cursorline */
-.markdown-source-view.mod-cm6 .cm-line.cm-active:not(.HyperMD-codeblock) {
-  background: color-mix(in srgb, var(--text-normal) 5%, transparent);
-  box-shadow: inset 2px 0 0 var(--rb-pink);
-}
-
-/* line numbers, when switched on */
-.markdown-source-view.mod-cm6 .cm-lineNumbers .cm-gutterElement {
-  min-width: 3ch;
-  padding: 0 8px 0 6px;
-  text-align: right;
-  font-family: var(--font-monospace);
-  font-size: 0.78em;
-  color: var(--text-faint);
-}
-.markdown-source-view.mod-cm6 .cm-lineNumbers .cm-gutterElement.cm-activeLineGutter { color: var(--rb-t0); }
-
-/* headings keep their markdown marks, dim and small: # ## ### */
-.markdown-rendered :is(h1, h2, h3, h4, h5, h6)::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line:is(.HyperMD-header-1, .HyperMD-header-2, .HyperMD-header-3, .HyperMD-header-4, .HyperMD-header-5, .HyperMD-header-6):not(.cm-active)::before {
-  margin-right: 0.7em;
-  font-family: var(--font-monospace);
-  font-size: calc(var(--font-text-size, 16px) * 0.75);
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--text-faint);
-}
-.markdown-rendered h1::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-1:not(.cm-active)::before { content: "#"; }
-.markdown-rendered h2::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-2:not(.cm-active)::before { content: "##"; }
-.markdown-rendered h3::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-3:not(.cm-active)::before { content: "###"; }
-.markdown-rendered h4::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-4:not(.cm-active)::before { content: "####"; }
-.markdown-rendered h5::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-5:not(.cm-active)::before { content: "#####"; }
-.markdown-rendered h6::before,
-.markdown-source-view.mod-cm6.is-live-preview .cm-line.HyperMD-header-6:not(.cm-active)::before { content: "######"; }
-
-/* bullets are dashes */
-.markdown-source-view.mod-cm6 .list-bullet::after,
-.markdown-rendered .list-bullet::after {
-  width: 8px;
-  height: 2px;
-  border-radius: 0;
-}
-
-/* code: a small terminal window in reading view (title bar with three dots), a coloured edge in the editor */
-.markdown-rendered pre {
-  position: relative;
-  padding-top: 32px;
-  border: 1px solid var(--rb-line);
-  border-radius: var(--rb-r-m);
-}
-.markdown-rendered pre::before {
-  content: "";
-  position: absolute;
-  top: 11px;
-  left: 12px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--rb-pink);
-  box-shadow: 14px 0 0 var(--rb-yellow), 28px 0 0 var(--rb-green);
-  opacity: 0.9;
-}
-.markdown-rendered pre::after {
-  content: "";
-  position: absolute;
-  top: 29px;
-  left: 0;
-  right: 0;
-  border-top: 1px solid var(--rb-line);
-  pointer-events: none;
-}
-.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock { box-shadow: inset 2px 0 0 var(--rb-lilac); }
-.markdown-rendered :not(pre) > code { border: 1px solid var(--rb-line); }
-
-/* properties read like a yaml header */
-.metadata-container::before,
-.metadata-container::after {
-  content: "---";
-  display: block;
-  font-family: var(--font-monospace);
-  font-size: var(--font-ui-smaller);
-  color: var(--text-faint);
-}
-
-/* ── search: a prompt, then grep output ──
-   the results reuse the backlinks look (section 15). the box gets the ❯ the quick switcher has. */
-.workspace-leaf-content[data-type="search"] .search-input-container > .svg-icon { display: none; }
-.workspace-leaf-content[data-type="search"] .search-input-container::before {
-  content: "❯";
-  -webkit-mask: none;
-          mask: none;
-  background: none;
-  width: auto;
-  height: auto;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  font-family: var(--rb-prompt-font);
-  font-size: var(--font-ui-small);
-  line-height: 1;
-  color: var(--rb-pink);
-  pointer-events: none;
-}
-.workspace-leaf-content[data-type="search"] .search-input-container input {
-  border-radius: var(--rb-r-m);
-  background: transparent;
-  box-shadow: inset 0 0 0 1px var(--background-modifier-border);
-}
-.workspace-leaf-content[data-type="search"] .search-input-container input:hover { box-shadow: inset 0 0 0 1px var(--background-modifier-border-hover); }
-.workspace-leaf-content[data-type="search"] .search-results-info {
-  padding: 4px 12px;
-  color: var(--text-faint);
-  font-size: var(--font-ui-smaller);
-  text-transform: var(--rb-case, lowercase);
-}
-.workspace-leaf-content[data-type="search"] .search-results-info::before { content: "# "; color: var(--rb-t5); }
-.workspace-leaf-content[data-type="search"] .search-empty-state {
-  margin: 0;
-  padding: 6px 12px 14px;
-  text-align: left;
-  font-size: var(--font-ui-smaller);
-  font-style: normal;
-  color: var(--text-faint);
-  text-transform: var(--rb-case, lowercase);
-}
-.workspace-leaf-content[data-type="search"] .search-empty-state::before { content: "# "; color: var(--rb-t5); }
-.workspace-leaf-content[data-type="search"] .search-result-container { padding-top: 4px; }
+html body ::-webkit-scrollbar-thumb:horizontal { background-image: var(--rb-gradient-h) !important; min-height: 0; min-width: 40px; }
+html body ::-webkit-scrollbar-thumb:hover,
+html body ::-webkit-scrollbar-thumb:active { border-width: 1px !important; background-color: transparent !important; }
